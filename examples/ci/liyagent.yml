@@ -1,0 +1,90 @@
+# Agents as code in GitHub Actions: plan on a pull request, apply on merge.
+#
+# Copy to .github/workflows/ticketiq.yml in the repository that holds your
+# agent bundles (`tiq export AGENT -o agents/AGENT.json` writes one).
+#
+# Credential: a governance service account, not a person's password.
+#   1. Access → Users: add an account with NO password (say `ci-deployer`) and a
+#      role holding only what the pipeline needs — agents.get, agents.update,
+#      agents.create, policy.create/policy.update to validate policies,
+#      agents.trigger.update to pause triggers, admin.write for replays.
+#   2. POST /api/service-accounts {"name": "github", "account": "ci-deployer",
+#      "ttl_days": 90} — the response's client_id and client_secret, once.
+#   3. Store `svc/github:<client_secret>` as the repository secret TICKETIQ_TOKEN.
+# It works on an instance where SSO is enforced, is refused if the account is
+# given a password or an owner role, and ends when the service account is deleted.
+#
+# Exit codes (every tiq verb): 0 nothing pending, 2 changes pending / policy
+# invalid, 1 error or refusal.
+
+name: ticketiq
+
+on:
+  pull_request:
+    paths: ["agents/**", "policies/**"]
+  push:
+    branches: [main]
+    paths: ["agents/**", "policies/**"]
+
+permissions:
+  contents: read
+
+env:
+  TICKETIQ_URL: ${{ vars.TICKETIQ_URL }}
+  TICKETIQ_TOKEN: ${{ secrets.TICKETIQ_TOKEN }}
+
+jobs:
+  plan:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install httpx
+      # tiq is one file with no dependency beyond httpx; a checkout of
+      # Liyagent (or a vendored copy of ticketiq/cli.py) provides it.
+      - uses: actions/checkout@v4
+        with: {repository: your-org/ticketiq, path: ticketiq-src}
+      - name: Validate policies
+        run: |
+          for f in policies/*.cedar; do
+            [ -e "$f" ] || continue
+            PYTHONPATH=ticketiq-src python -m ticketiq.cli policy validate --strict "$f"
+          done
+      - name: Plan every bundle
+        # 2 means "this change would modify the instance" — expected on a PR,
+        # so it is reported, not failed; 1 (refused or broken) fails the job.
+        run: |
+          status=0
+          for f in agents/*.json; do
+            set +e
+            PYTHONPATH=ticketiq-src python -m ticketiq.cli plan -f "$f"
+            rc=$?
+            set -e
+            if [ "$rc" -eq 1 ]; then status=1; fi
+          done
+          exit $status
+
+  apply:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production     # a required reviewer, if the environment has one
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install httpx
+      - uses: actions/checkout@v4
+        with: {repository: your-org/ticketiq, path: ticketiq-src}
+      - name: Apply every bundle
+        run: |
+          for f in agents/*.json; do
+            PYTHONPATH=ticketiq-src python -m ticketiq.cli apply -f "$f"
+          done
+      - name: Drift check
+        # After an apply the instance must match the files: 2 here is drift.
+        run: |
+          for f in agents/*.json; do
+            PYTHONPATH=ticketiq-src python -m ticketiq.cli plan -f "$f"
+          done
