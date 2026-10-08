@@ -28,7 +28,7 @@ The connector is read-only and uses REST API v2, so descriptions arrive as plain
 3. Test it (`POST /api/sources/{id}/test`), then sync (`POST /api/sources/{id}/sync`).
 4. Open **Tickets**: synced issues are classified, correlated and routed like any other ticket.
 
-The source keeps the reference, not the token, and opens it each time the connector runs, so a rotated secret is used on the next sync; the secret's **Used by** lists the source. Saving refuses a reference to a missing secret (`422`), and naming a secret takes `governance.write` as well as `sources.write`. A token pasted as the value still works and is masked (`••••`) on every read.
+The source keeps the reference, not the token, and opens it each time the connector runs, so a rotated secret is used on the next sync. The secret's **Used by** lists the source. Saving refuses a reference to a missing secret (`422`), and naming a secret takes `governance.write` as well as `sources.write`. A token pasted as the value still works and is masked (`••••`) on every read.
 
 > [!TIP]
 > Point **Categories** at a synced Jira project to learn a taxonomy from its history. See [Triage and categories](/docs/service-desk/triage-categories).

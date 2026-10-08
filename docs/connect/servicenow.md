@@ -19,7 +19,7 @@ outcomes: Create a read-only ServiceNow integration user; Add a ServiceNow sourc
 ## Add a ServiceNow source
 
 1. Store the password or token in the [secrets store](/docs/connect/secrets), for example as `SERVICENOW_SVC`.
-2. Create a source of type ServiceNow with the instance URL, the table, the user and `secret://SERVICENOW_SVC` as the password. In the console, open **Settings** → **Data & retention**, choose **ServiceNow** and pick the secret under **Password / API token**; through the API, `POST /api/sources`.
+2. Create a source of type ServiceNow with the instance URL, the table, the user and `secret://SERVICENOW_SVC` as the password. In the console, open **Settings** → **Data & retention**, choose **ServiceNow** and pick the secret under **Password / API token**. Through the API, use `POST /api/sources`.
 3. Test it (`POST /api/sources/{id}/test`) and sync (`POST /api/sources/{id}/sync`).
 
 The source keeps the reference and opens it each time the connector runs, so a rotated secret is used on the next sync, and the secret's **Used by** lists the source. Saving refuses a reference to a missing secret (`422`), and naming a secret takes `governance.write` as well as `sources.write`. A password pasted as the value still works and is masked on every read.

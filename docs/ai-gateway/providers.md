@@ -7,7 +7,7 @@ outcomes: Add and test a provider before saving it; Keep its key in the secrets 
 ---
 
 > [!PREVIEW]
-> The console has two provider pages. **Provider bindings** holds the providers agents bind to (the `/api/llm/providers` API) and is what this page describes. **LLM providers** is a newer page for providers routed through the gateway (`/api/llm-gateway/providers`); it offers Anthropic, AWS Bedrock, Google AI, OpenAI and OpenAI-compatible, but not Vertex AI yet.
+> The console has two provider pages. **Provider bindings** holds the providers agents bind to (the `/api/llm/providers` API) and is what this page describes. **LLM providers** is a newer page for providers routed through the gateway (`/api/llm-gateway/providers`). It offers Anthropic, AWS Bedrock, Google AI, OpenAI and OpenAI-compatible, but not Vertex AI yet.
 
 ## Provider types
 
@@ -43,7 +43,7 @@ outcomes: Add and test a provider before saving it; Keep its key in the secrets 
 
 The providers table shows **Status**, **Default model**, **Health** and **Used by**. A provider's details add its **Circuit**, and its **Leaderboard** tab ranks the callers that use it and the models they reach for.
 
-- Health comes from scheduled probes (`GET /api/llm/provider-health`; run one now with `POST /api/llm/providers/{name}/health/probe`). A failed probe opens the provider's circuit.
+- Health comes from scheduled probes (`GET /api/llm/provider-health`). Run one now with `POST /api/llm/providers/{name}/health/probe`. A failed probe opens the provider's circuit.
 - Each backend has a circuit breaker: closed, open, or half-open with a single probe. Each breaker's state is at `GET /api/llm/breakers`.
 
 ## Next steps

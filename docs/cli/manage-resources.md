@@ -15,7 +15,7 @@ liya agents chat hr-helper "How many days of leave do I have?"
 liya agents eval hr-helper --dataset hr-faq        # exits 1 on a failure or regression
 ```
 
-`liya agents create` installs a blueprint (an unknown name lists the available ones); create other agents in the console or with `PUT /api/gateway/agents/{agent_id}`. `liya agents update`, `delete`, `pause` and `resume` work on existing agents.
+`liya agents create` installs a blueprint (an unknown name lists the available ones). Create other agents in the console or with `PUT /api/gateway/agents/{agent_id}`. `liya agents update`, `delete`, `pause` and `resume` work on existing agents.
 
 ## Who may use an agent, and what it may reach
 
@@ -30,7 +30,7 @@ A new agent is not locked down. Cedar governs a resource only once some policy n
 | --- | --- |
 | `readonly` | Read the agent: transcripts, cost, the validation log |
 | `sandboxed` | Read it and run it (playground, triggers) |
-| `standard` | Run and reconfigure it, and use it as a subagent; not its kill switch |
+| `standard` | Run and reconfigure it, and use it as a subagent, but not its kill switch |
 | `full` | Everything, the kill switch included |
 
 ```bash

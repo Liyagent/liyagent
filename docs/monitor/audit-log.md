@@ -23,7 +23,7 @@ outcomes: Filter the audit log by actor, action, outcome and time; Export rows a
    | Subsystem, Service | The part of the product that wrote the row, or a connector |
    | Finding action, category, engine, family, policy | Guardrail findings |
 
-3. Type free text, or `field=value` / `field!=value`, in the search box. **Search all fields** (the default) matches the action, the actor and every detail value; **Search messages** matches only each row's one-line message.
+3. Type free text, or `field=value` / `field!=value`, in the search box. **Search all fields** (the default) matches the action, the actor and every detail value. **Search messages** matches only each row's one-line message.
 4. Turn on **Group by request** to see every row one request produced together.
 
 The same search as an API call:
@@ -40,7 +40,7 @@ curl -G https://<host>/api/audit/query -H "Authorization: Bearer $TOKEN" \
 
 - `GET /api/audit/export?fmt=csv` (or `fmt=jsonl`) exports the filtered rows: 10,000 by default, `limit` up to 50,000. Requires `audit.read`.
 - **Retention & evidence** → **Download evidence bundle** (or `GET /api/audit/export?fmt=bundle`) produces a zip of the whole hash-chained log and a manifest naming every file's SHA-256, the row count, the chain head and the checkpoints. The manifest carries two signatures:
-  - an **Ed25519 attestation** with the instance's audit signing key, whose public key anyone can have — so a third party can check the bundle with no access to the instance;
+  - an **Ed25519 attestation** with the instance's audit signing key, whose public key anyone can have, so a third party can check the bundle with no access to the instance.
   - an **HMAC** with the instance's audit key, kept for existing verifiers. Only the host can check it.
 
 ### Verify a bundle without instance access
@@ -56,16 +56,16 @@ curl -G https://<host>/api/audit/query -H "Authorization: Bearer $TOKEN" \
 
    It checks the Ed25519 signature on the manifest against the published keys, the bundle's date against the key's validity window, every row's hash and link, the archive segments, the anchored checkpoint, and the rows file and evidence files against the manifest. Exit codes: `0` intact and signed by a published key, `2` a finding, `3` intact but no published key or fingerprint was given to trust the signer by, `1` unreadable.
 
-The verifier cannot check the HMAC signatures on checkpoints and on rows redacted by an erasure; those need the instance's key. `tiq audit verify bundle.zip` (also `liya audit verify`) checks everything on the host with `--local-key`, and the attestation with `--audit-keys audit-keys.json`.
+The verifier cannot check the HMAC signatures on checkpoints and on rows redacted by an erasure. Those need the instance's key. `tiq audit verify bundle.zip` (also `liya audit verify`) checks everything on the host with `--local-key`, and the attestation with `--audit-keys audit-keys.json`.
 
 ### Rotate the audit signing key
 
-`POST /api/audit/signing-key/rotate` (requires `governance.write`, audited as `audit.signing_key.rotate`) makes a new active key. The old key stops signing at once, its private half is deleted and its validity window ends; its public key stays listed, so the bundles it signed still verify. If the key leaked, send `{"compromised": true, "reason": "…"}`: the old key is listed as `revoked`, and verifiers refuse what it signed.
+`POST /api/audit/signing-key/rotate` (requires `governance.write`, audited as `audit.signing_key.rotate`) makes a new active key. The old key stops signing at once, its private half is deleted and its validity window ends. Its public key stays listed, so the bundles it signed still verify. If the key leaked, send `{"compromised": true, "reason": "…"}`: the old key is listed as `revoked`, and verifiers refuse what it signed.
 
 ## Integrity and retention
 
 - Rows are hash-chained. **Verify chain now**, or `GET /api/audit/verify` (requires `audit.read`, rate-limited), walks the live chain with the instance's key and names each edited, deleted or reordered row and any forged checkpoint.
-- **Keep rows for (days)** and **Legal hold** are set under **Retention & evidence** (`GET` / `PUT /api/audit/retention`; `PUT` requires `admin.write`).
+- **Keep rows for (days)** and **Legal hold** are set under **Retention & evidence** (`GET` / `PUT /api/audit/retention`, where `PUT` requires `admin.write`).
 
 > [!NOTE]
 > Request bodies are never captured on sign-in, token, OAuth or secret endpoints, whatever the capture settings.

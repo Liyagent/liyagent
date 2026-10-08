@@ -7,7 +7,7 @@ outcomes: Break down spend by any dimension; Export usage for chargeback; Set or
 
 ## Read the numbers
 
-Open **AI Gateway** › **Cost and usage**. The headline shows active agents, requests and spend for the period; the activity table lists calls with these columns: When, Agent, What, Tokens, Cost and Outcome.
+Open **AI Gateway** › **Cost and usage**. The headline shows active agents, requests and spend for the period. The activity table lists calls with these columns: When, Agent, What, Tokens, Cost and Outcome.
 
 | Question | Endpoint |
 | --- | --- |

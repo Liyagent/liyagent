@@ -16,7 +16,7 @@ It is available as a hosted product at `liyagent.com` and as a self-hosted stack
 2. **Classify.** Liya Classify sets a category and priority. Liya Triage can run a model pass to correct the category and add a triage note.
 3. **Correlate.** Liya Correlate compares the ticket with open tickets by vector similarity. A match inside the threshold is folded in as a duplicate and the reporter is told it is a known issue.
 4. **Resolve.** Liya Resolve retrieves likely fixes from the knowledge base. A verified answer to the same question can be served straight from the semantic answer cache.
-5. **Assign and notify.** Liya Assign picks the team and SLA from the routing table; Liya Notify sends email, Teams, Slack or webhook notifications.
+5. **Assign and notify.** Liya Assign picks the team and SLA from the routing table. Liya Notify sends email, Teams, Slack or webhook notifications.
 6. **Review.** After closure, Liya Review grades the case and Liya Scribe drafts a knowledge article for a person to approve.
 
 ## The three planes
@@ -25,7 +25,7 @@ It is available as a hosted product at `liyagent.com` and as a self-hosted stack
 | --- | --- | --- |
 | Agents | Built-in Liya agents, managed agents you create, self-managed agents that call the gateway, sub-agents, triggers, playground and evals | **Agents**: All agents, Agent network, Evaluations, Red teaming |
 | AI Gateway | LLM providers, the model chain and fallback, guardrails, cost and usage, budgets, rate limits | **AI Gateway**: LLM providers, Provider bindings, Guardrails, Guardrail rules, Policy hooks, Cost and usage, Budgets |
-| Governance | Users and roles, Cedar policies, tenants, the secrets store, the audit log, incidents and compliance | **Governance**: Overview, Incidents, Compliance, Audit log; **Settings**: Access, Tenants; **Connect**: Secrets store |
+| Governance | Users and roles, Cedar policies, tenants, the secrets store, the audit log, incidents and compliance | **Governance**: Overview, Incidents, Compliance, Audit log. **Settings**: Access, Tenants. **Connect**: Secrets store |
 
 Beside these platform sections, the rail lists the **solutions** a tenant has: IT service desk (Tickets, Analytics, Insights, Categories), SAP, HR and Salesforce, each with its own tabs.
 

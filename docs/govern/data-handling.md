@@ -18,15 +18,15 @@ The embedding model is baked into the image, so embeddings are computed on your 
 ## Encryption
 
 - Credentials (provider keys, connector passwords, people's OAuth tokens), signing keys and agent memory are sealed with AES-256-GCM. The data key is wrapped by a local key (`TICKETIQ_VAULT_KEY`, or a generated `vault.key` file in the data directory by default), AWS KMS (`TICKETIQ_VAULT_KMS_KEY_ID`) or HashiCorp Vault Transit (`TICKETIQ_VAULT_TRANSIT_KEY`).
-- Content (transcript and session bodies, answer-record questions, attachment blobs) is sealed too only with `TICKETIQ_SEAL_CONTENT` on; it is off by default.
-- With `TICKETIQ_TENANT_KEYS` on (off by default), each tenant gets its own data key. Retiring a tenant destroys its key, which crypto-shreds its sealed content; retirement needs both tenant keys and content sealing on. Rotate a tenant key with `POST /api/vault/tenants/{tenant_id}/rotate`.
+- Content (transcript and session bodies, answer-record questions, attachment blobs) is sealed too only with `TICKETIQ_SEAL_CONTENT` on. It is off by default.
+- With `TICKETIQ_TENANT_KEYS` on (off by default), each tenant gets its own data key. Retiring a tenant destroys its key, which crypto-shreds its sealed content. Retirement needs both tenant keys and content sealing on. Rotate a tenant key with `POST /api/vault/tenants/{tenant_id}/rotate`.
 - Cached answers are sealed with the tenant's key.
 
 ## Retention
 
 | Record | Control |
 | --- | --- |
-| Audit log | **Keep rows for (days)** (`TICKETIQ_AUDIT_RETENTION_DAYS`, 365); older rows move to sealed archive segments; legal hold |
+| Audit log | **Keep rows for (days)** (`TICKETIQ_AUDIT_RETENTION_DAYS`, 365), older rows move to sealed archive segments, legal hold |
 | Transcripts | Retention days (`TICKETIQ_TRANSCRIPT_RETENTION_DAYS`, 90), max conversations, legal hold |
 | KB gap reports | `TICKETIQ_KB_GAP_RETENTION_DAYS` (90) |
 | Semantic cache | Entry lifetime (`ttl_s`) |

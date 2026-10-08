@@ -25,7 +25,7 @@ outcomes: Create a scoped budget; Choose between refuse and fall back at the lim
 
    | Field | Notes |
    | --- | --- |
-   | Name | Lowercase; it is the budget's identity in the URL and the audit log |
+   | Name | Lowercase. It is the budget's identity in the URL and the audit log |
    | Scope | Kind and value, for example **A tag** `team=hr` |
    | USD / tokens | Either or both |
    | Period | Per month, per week or per day, counted from the start of the period |

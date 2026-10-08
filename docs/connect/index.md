@@ -7,4 +7,4 @@ summary: Give agents tools through MCP servers, connect ticketing and chat syste
 
 Agents are only as useful as what they can reach. Liyagent connects in three ways: **MCP servers** give managed agents tools, **connections and connectors** bring in tickets and let agents act in systems such as Jira, ServiceNow, Salesforce, Teams and email, and the **secrets store** holds every credential those need, referenced by label rather than pasted into settings.
 
-For SAP, see [Connect SAP](/docs/connect/sap): Liya calls SAP S/4HANA's own APIs, with a person confirming each agent call, or connects to the MCP Gateway in your SAP Integration Suite. For Salesforce, see [Connect Salesforce](/docs/connect/salesforce).
+For SAP, see [Connect SAP](/docs/connect/sap): Liya calls SAP S/4HANA's own APIs, with a person confirming each agent call, or connects to the MCP Gateway in your SAP Integration Suite. For Salesforce, see [Connect Salesforce](/docs/connect/salesforce). For Microsoft Dynamics 365 (Sales, Customer Service, Field Service, Finance, Supply Chain Management, Business Central and the rest), see [Connect Dynamics 365](/docs/connect/dynamics-365).

@@ -56,7 +56,7 @@ outcomes: Start the Liyagent server locally; Sign in as the first admin; File a 
      -d '{"title":"VPN drops every 10 minutes","description":"Since this morning the VPN client disconnects on Wi-Fi."}'
    ```
 
-2. The pipeline result shows each agent's step. Open the ticket to see the category (for example **Network**), the priority, the team it was routed to (**Network Operations**) and the SLA due time; its **Pipeline runs** and **History** tabs show how it got there.
+2. The pipeline result shows each agent's step. Open the ticket to see the category (for example **Network**), the priority, the team it was routed to (**Network Operations**) and the SLA due time. Its **Pipeline runs** and **History** tabs show how it got there.
 3. File the same problem again from another user. Liya Correlate folds it into the first ticket and the second reporter is told it is a known issue.
 
 ## Connect a model (optional)

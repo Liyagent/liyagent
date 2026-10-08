@@ -13,13 +13,13 @@ outcomes: Add a user with a built-in role; Write a Cedar policy and validate it;
    | --- | --- |
    | Owner | Everything, including every tenant |
    | Administrator | Everything except managing users and roles, and weakening an active control |
-   | Operator | Running the service desk: working tickets, starting and stopping agents, managing sources; builds no agents |
+   | Operator | Running the service desk: working tickets, starting and stopping agents, managing sources. Builds no agents |
    | Analyst | Reading everything operational, and running assistive agents |
    | Reviewer | Working the review queues they are assigned to, and nothing else |
    | Viewer | Read-only |
 
 2. To create a custom role, open **Roles**, choose **+ Add role**, pick permissions and **Create role** (`PUT /api/access/roles/{name}`).
-3. To give a person a role in one tenant, or in every tenant, add a role binding (**Role bindings**, `POST /api/access/role-bindings`). To manage membership in your directory instead, map directory groups to roles on the SSO provider (**Roles from groups**) or provision groups with SCIM; see [Identity and roles](/docs/govern/identity-roles).
+3. To give a person a role in one tenant, or in every tenant, add a role binding (**Role bindings**, `POST /api/access/role-bindings`). To manage membership in your directory instead, map directory groups to roles on the SSO provider (**Roles from groups**) or provision groups with SCIM. See [Identity and roles](/docs/govern/identity-roles).
 
 ## Policies
 

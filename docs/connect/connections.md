@@ -16,16 +16,16 @@ outcomes: Connect your own account to a service; Register a connection provider 
 
 ## Connect your account
 
-1. Open **Connections**. **Connected applications** lists what you have connected; **Available to connect** lists the rest.
+1. Open **Connections**. **Connected applications** lists what you have connected. **Available to connect** lists the rest.
 2. Choose **Connect** on a service and approve the permissions it asks for.
 3. Back in Liyagent, the row shows **Permissions asked**, **Permissions granted**, **Expiry** and **Last used**.
-4. If a row says **Needs reconnecting**, the token expired or was revoked; choose **Connect** again.
+4. If a row says **Needs reconnecting**, the token expired or was revoked. Choose **Connect** again.
 
 Choose **Disconnect** (`DELETE /api/connections/{provider}`) to revoke it.
 
 ## Register a provider (admin)
 
-Admins add the OAuth apps that users connect through on **Integrations setup**, picking from a catalogue of common providers (for example Google, Microsoft Entra ID, Okta, GitHub, Slack, Salesforce and Box) or entering one by hand. The page shows the **Callback URL to register at the provider**. Through the API: `GET /api/connections/providers` lists them and `PUT /api/connections/providers/{name}` saves one. `POST /api/connections/providers/discover` reads a provider's metadata from its issuer URL; `POST /api/connections/providers/register` registers dynamically where the provider allows it.
+Admins add the OAuth apps that users connect through on **Integrations setup**, picking from a catalogue of common providers (for example Google, Microsoft Entra ID, Okta, GitHub, Slack, Salesforce and Box) or entering one by hand. The page shows the **Callback URL to register at the provider**. Through the API: `GET /api/connections/providers` lists them and `PUT /api/connections/providers/{name}` saves one. `POST /api/connections/providers/discover` reads a provider's metadata from its issuer URL, and `POST /api/connections/providers/register` registers dynamically where the provider allows it.
 
 > [!NOTE]
 > OAuth needs `TICKETIQ_PUBLIC_BASE_URL` so the provider can send users back to the right address.

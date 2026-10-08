@@ -10,7 +10,7 @@ outcomes: Find and open a conversation; Jump from a turn to its trace and evalua
 1. Open the agent and its **Transcripts** tab (`GET /api/agents/{key}/transcripts`).
 2. Open a conversation (`GET /api/agents/{key}/transcripts/{conv_id}`). Each turn shows the text (if the agent records it), tokens, cost and outcome.
 3. Open the conversation's trace (`GET /api/transcripts/{conv_id}/trace`): one trace per request that wrote to it, the latest shown unless you pass `?trace=`, with model calls, tool calls, guardrail findings and fallback attempts in order. A conversation with recording off has no spans to show.
-4. See how it was scored with `GET /api/transcripts/{conv_id}/evaluations` (each evaluator's latest run; `?history=true` for every run).
+4. See how it was scored with `GET /api/transcripts/{conv_id}/evaluations` (each evaluator's latest run, or `?history=true` for every run).
 
 > [!TIP]
 > Save a conversation as an eval case to stop a fixed bug from coming back. See [Playground and evals](/docs/agents/playground-evals).
@@ -29,7 +29,7 @@ The agent's **recording mode** decides whether text is kept at all: `full`, `met
 ## Delete and hold
 
 - Delete one conversation with `DELETE /api/transcripts/{conv_id}`, or many with `POST /api/transcripts/bulk-delete` (it only counts matches until you send `"dry_run": false`). Both require `governance.write`.
-- A **legal hold** stops conversations from ageing out and from being deleted, until it is released. The audit log's legal hold freezes every conversation; a scoped hold covers one conversation, agent, tenant or person, and a delete it covers is refused with `409`.
+- A **legal hold** stops conversations from ageing out and from being deleted, until it is released. The audit log's legal hold freezes every conversation. A scoped hold covers one conversation, agent, tenant or person, and a delete it covers is refused with `409`.
 
 ## Next steps
 

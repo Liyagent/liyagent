@@ -13,10 +13,10 @@ outcomes: Pick the right template for a risk; Know what to adjust after starting
 | --- | --- | --- |
 | Start blank | Nothing | Build your own |
 | PII protection | Redact PII in both directions, masking emails, phone numbers, cards, IBANs, national IDs and tokens | Choose Mask, Tokenise or Block per type |
-| Prompt attack defense | Block prompt injection on input | Monitor first; tune for your tools |
+| Prompt attack defense | Block prompt injection on input | Monitor first, then tune for your tools |
 | Secrets and credentials | Custom patterns in both directions for cloud keys, private keys and platform tokens: masked, with private keys blocked | Block more of them |
 | Profanity | Word filter with the managed profanity list, masking replies | Add your own words |
-| Content safety | Harm categories scored in both directions, starting in monitor mode; self-harm and harassment escalate to a person, the rest block | Tune each category's threshold on live scores |
+| Content safety | Harm categories scored in both directions, starting in monitor mode. Self-harm and harassment escalate to a person, and the rest block | Tune each category's threshold on live scores |
 | Confidential HR topics | Deny topics: Salary and pay, Redundancy and job cuts, HR case (an HR case is flagged for a person on the way in) | Escalate to HR instead of blocking |
 
 > [!TIP]

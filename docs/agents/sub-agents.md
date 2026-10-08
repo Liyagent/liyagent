@@ -22,7 +22,7 @@ A managed agent can hand part of a task to a **sub-agent**: a new one defined on
    | Description | What the parent reads to decide to use it. Be specific about when, not just what. |
    | Instructions | The sub-agent's own brief. New sub-agents only. |
    | Context it is given | **Task only**, **Handoff note** (the parent writes one) or **Last 6 turns of this conversation**. Passed context counts against the budget. |
-   | Model override / Provider override | Optional, new sub-agents only; blank inherits the parent's. Use a cheaper model for narrow tasks. A provider override needs a model. |
+   | Model override / Provider override | Optional, new sub-agents only. Blank inherits the parent's. Use a cheaper model for narrow tasks. A provider override needs a model. |
    | Its MCP servers | New sub-agents only. Each tool list is held to what the parent itself may use on the same server. |
 
 4. Choose **Save runtime**, and test from the parent's **Playground**.

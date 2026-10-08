@@ -37,7 +37,7 @@ A tenant that isn't an IT desk (HR, finance, facilities) can have categories lea
 1. Open **IT service desk › Categories** and choose **Learn from history** (`POST /api/taxonomy/discover`), or learn from a CSV export. TicketIQ embeds the tenant's tickets, clusters them and picks the number of clusters with the best separation.
 2. Review the proposal. Each category has a name, description, count, examples, keywords and a suggested team taken from past assignments.
 3. Rename, merge, split or delete categories and set teams (`POST /api/taxonomy/proposal/edit`).
-4. Choose **Approve taxonomy** (`POST /api/taxonomy/approve`). Approval writes a new version and makes it live at once. To go back to an earlier version, choose **Activate** on it (`POST /api/taxonomy/activate`); **Use IT defaults** returns to the built-in categories.
+4. Choose **Approve taxonomy** (`POST /api/taxonomy/approve`). Approval writes a new version and makes it live at once. To go back to an earlier version, choose **Activate** on it (`POST /api/taxonomy/activate`). **Use IT defaults** returns to the built-in categories.
 5. Choose **Re-classify existing tickets** if you want history to use the new categories (`POST /api/taxonomy/reclassify`).
 
 After activation, classification picks the nearest category centroid, with keyword and source-label hints.

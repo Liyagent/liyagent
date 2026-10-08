@@ -13,8 +13,8 @@ Liya reaches SAP in one of two ways.
 | Use it when | You don't have SAP Integration Suite | You have SAP Integration Suite |
 | In Liyagent | The managed **SAP S/4HANA** and **SAP SuccessFactors** servers | The **SAP MCP Gateway** card: a remote MCP server |
 | What agents get | Fixed tools over SAP's published S/4HANA APIs, by business area | The tools you publish on the gateway |
-| An agent's call to SAP | Runs only after the person who asked confirms it | Reads run straight away; writes wait for the person's Confirm (with the gateway route set) |
-| Work with no person behind it, such as a schedule | Refused, except a read routine the person set up and confirmed in Teams | Reads allowed; for writes, register the server without the gateway route |
+| An agent's call to SAP | Runs only after the person who asked confirms it | Reads run straight away, but writes wait for the person's Confirm (with the gateway route set) |
+| Work with no person behind it, such as a schedule | Refused, except a read routine the person set up and confirmed in Teams | Reads allowed. For writes, register the server without the gateway route |
 
 Liyagent also runs managed **SAP Field Service Management** servers (see [SAP Field Service Management](/docs/connect/sap-fsm)) and **SAP Products** servers, which reach a chosen SAP product's APIs. An agent's calls to SAP through either are confirmed the same way as on a direct S/4HANA connection.
 
@@ -62,7 +62,7 @@ Each area offers these tools:
 | | `raise_predicted_failure` | **Creates** one maintenance notification with the evidence when an equipment is heading for a limit. With `dry_run`, it shows the notification without creating it. |
 | Purchasing | `search_purchase_orders` | Purchase orders by supplier, purchasing group or date. For a material, its open purchase order items. |
 | | `get_purchase_order` | One purchase order with its items and delivery dates. |
-| | `create_purchase_requisition` | **Creates** a purchase requisition of up to 20 items. It enters SAP's release workflow; nothing is ordered or approved. |
+| | `create_purchase_requisition` | **Creates** a purchase requisition of up to 20 items. It enters SAP's release workflow. Nothing is ordered or approved. |
 | Sales | `search_sales_orders` | Sales orders for a customer or the customer's own PO reference, open ones by default. |
 | | `get_sales_order` | One sales order with its items and the deliveries made against it. |
 | | `get_delivery` | One outbound delivery: goods issue, picking and proof of delivery. |
@@ -91,7 +91,7 @@ The four tools that create documents work only once document creation is switche
    | Default planning plant | `maintenance_plant` | Used by new notifications, orders and requisitions, such as `1010`. |
    | Default main work center | `main_work_center` | Used by new maintenance orders, such as `RES-0100`. |
    | Default purchasing group | `purchasing_group` | Used by new requisitions, such as `001`. |
-   | SAP client | `sap_client` | Three digits, such as `100`. Only for on-premise or private cloud; S/4HANA Cloud ignores it. |
+   | SAP client | `sap_client` | Three digits, such as `100`. Only for on-premise or private cloud. S/4HANA Cloud ignores it. |
    | Let Liya create SAP documents | `digital_access_ack` | Off by default, so the connection only reads. See [Documents and SAP Digital Access](#documents-and-sap-digital-access). |
    | Calls a minute | `max_calls_per_minute` | Calls a minute to this SAP system from each Liya process, from 1 to 600. Blank is 60. |
    | Business areas | `sap_areas` | Comma-separated: `maintenance`, `purchasing`, `sales`, `inventory`, `finance`, `master_data`. Blank is `maintenance` and `purchasing`. |
@@ -222,24 +222,24 @@ Each proposal is held to these rules:
 
 A person can confirm only in a one-to-one chat with the agent in Microsoft Teams or Google Chat, in the web chat, or in the agent's **Playground** tab when they are signed in to the console. Anything else is refused with a sentence that says why, and nothing is sent to SAP. That includes:
 
-- schedules, webhooks and other triggers;
-- Teams group chats and channels;
-- eval runs;
+- schedules, webhooks and other triggers
+- Teams group chats and channels
+- eval runs
 - apps and agents that call in through the `/mcp` endpoint or A2A.
 
 Three kinds of call go straight through, because a person has already decided them:
 
-- your own call from the server's inspector (**Run tool**), where you choose the tool and its arguments;
-- a call an approver runs from **Approvals**. Approvers only ever see calls the person already confirmed;
+- your own call from the server's inspector (**Run tool**), where you choose the tool and its arguments.
+- a call an approver runs from **Approvals**. Approvers only ever see calls the person already confirmed.
 - a scheduled routine's read. A person sets up a routine in their Teams chat and confirms one card naming the exact tool, its arguments and when it runs. The scheduler then runs exactly that read, and only while the routine is active. A routine never writes on its own: a write is sent to the person as a new proposal on each run.
 
 ### Documents and SAP Digital Access
 
 Documents created in SAP through another system, such as Liya, may count toward your SAP Digital Access licence. So a direct connection creates no documents until an administrator switches on **Let Liya create SAP documents** (`digital_access_ack`). Until then, a call that would create one is refused before anyone is asked to confirm it.
 
-- In Teams, the card names the Digital Access document type the call creates and says it may count toward your licence. A notification or an order is a service and maintenance document; a requisition is a purchase document (per item). The web chat shows the licence note without the type.
+- In Teams, the card names the Digital Access document type the call creates and says it may count toward your licence. A notification or an order is a service and maintenance document. A requisition is a purchase document (per item). The web chat shows the licence note without the type.
 - A confirmed write then follows the server's **Agent writes** setting. With **Require approval**, the default for a new server, it waits on **Approvals** until an approver runs it, and the person is told so.
-- Liya counts the documents it creates through each connection, per month and document type. **MCP servers** shows this month's count under the server, or that creating documents is off; the server's API record carries it as `sap_documents`.
+- Liya counts the documents it creates through each connection, per month and document type. **MCP servers** shows this month's count under the server, or that creating documents is off. The server's API record carries it as `sap_documents`.
 - The [audit log](/docs/monitor/audit-log) records every proposal as `agent.tool.confirmation`, and every confirmed call as `agent.tool.call`.
 
 ### Other safeguards

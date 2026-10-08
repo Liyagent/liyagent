@@ -9,7 +9,7 @@ outcomes: Configure SSO with an identity provider; Provision users with SCIM; Ex
 
 | Type | Who | Signs in with |
 | --- | --- | --- |
-| Human | People using the console | Password or SSO; a session cookie |
+| Human | People using the console | Password or SSO, then a session cookie |
 | Agent | Managed and self-managed agents | Agent credentials issued by Liyagent |
 | Client | Integrations and OAuth clients | API key, client credentials |
 | Service account | CI pipelines and the `liya` CLI | Client credentials, as the account it is bound to |
@@ -18,7 +18,7 @@ Audit rows record the actor and, where it is known, its type.
 
 ## Single sign-on
 
-1. Set `TICKETIQ_PUBLIC_BASE_URL`; SSO won't start without it, except from the instance itself (loopback) during development.
+1. Set `TICKETIQ_PUBLIC_BASE_URL`. SSO won't start without it, except from the instance itself (loopback) during development.
 2. Add an OpenID Connect provider on **Access** → **Single sign-on** (`PUT /api/auth/sso/{name}`), for example Microsoft Entra ID, with its authorization, token and userinfo URLs (https), client id and client secret.
 3. Under **Roles from groups**, map directory groups to roles.
 4. Under **New users**, choose **Existing accounts only** (the default) or **Create an account on first sign-in**, which requires a list of allowed email domains.
@@ -26,7 +26,7 @@ Audit rows record the actor and, where it is known, its type.
 
 ## SCIM
 
-Provision and deprovision users and groups from your directory at `/scim/v2/Users` and `/scim/v2/Groups`; configure SCIM and issue its token on **Access** (`PUT /api/scim`, `POST /api/scim/token`). When the directory deprovisions a user, the account is disabled and its grants and sessions are ended; depending on the SCIM setting it is then deleted, unless it is the only owner of an agent.
+Provision and deprovision users and groups from your directory at `/scim/v2/Users` and `/scim/v2/Groups`. Configure SCIM and issue its token on **Access** (`PUT /api/scim`, `POST /api/scim/token`). When the directory deprovisions a user, the account is disabled and its grants and sessions are ended. Depending on the SCIM setting, it is then deleted, unless it is the only owner of an agent.
 
 ## Service accounts
 
@@ -41,11 +41,11 @@ The table lists each service account's name, the account and role it acts as, wh
 
 | Action | What it does | API |
 | --- | --- | --- |
-| **Rotate secret** | Issues a new secret, shown once. The old one stops working at once and the sessions it minted end; the expiry starts again. | `POST /api/service-accounts/{name}/rotate` |
-| **Disable** / **Enable** | Disabling asks for a reason; the secret stops exchanging and its sessions end. Enabling restores it. | `PATCH /api/service-accounts/{name}` with `{"enabled": false, "reason": "..."}` |
+| **Rotate secret** | Issues a new secret, shown once. The old one stops working at once and the sessions it minted end. The expiry starts again. | `POST /api/service-accounts/{name}/rotate` |
+| **Disable** / **Enable** | Disabling asks for a reason, and the secret stops exchanging and its sessions end. Enabling restores it. | `PATCH /api/service-accounts/{name}` with `{"enabled": false, "reason": "..."}` |
 | **Delete** | Asks for a reason, deletes the service account and ends its sessions. | `DELETE /api/service-accounts/{name}` with `{"reason": "..."}` |
 
-Listing takes `access.read`; issuing, rotating, disabling, enabling and deleting take `access.write`. Issuing, rotating and enabling also take every permission the bound account holds, so nobody can hand out more than they have. Each action is in the audit log (`access.service_account.create`, `.rotate`, `.disable`, `.enable`, `.delete`), with its reason; the secret never is.
+Listing takes `access.read`. Issuing, rotating, disabling, enabling and deleting take `access.write`. Issuing, rotating and enabling also take every permission the bound account holds, so nobody can hand out more than they have. Each action is in the audit log (`access.service_account.create`, `.rotate`, `.disable`, `.enable`, `.delete`), with its reason, but the secret never is.
 
 ## Trusted issuers
 

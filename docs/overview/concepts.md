@@ -13,7 +13,7 @@ outcomes: Tell the Liya built-in agents apart and say which ones call a model; E
 | --- | --- | --- | --- |
 | `ingestion` | Liya Intake | Pipeline: inbound record to ticket draft | No |
 | `classifier` | Liya Classify | Pipeline: category and priority from a rule table | No |
-| `enrichment` | Liya Triage | Pipeline: rules first for category, priority and team, the model when they are unsure; adds a triage note | Yes |
+| `enrichment` | Liya Triage | Pipeline: rules first for category, priority and team, the model when they are unsure. It adds a triage note | Yes |
 | `deduplicator` | Liya Correlate | Pipeline: duplicate and storm detection by similarity | No (embeddings) |
 | `strategist` | Liya Resolve | Pipeline: retrieves resolutions from the knowledge base | No (retrieval) |
 | `router` | Liya Assign | Pipeline: team and SLA | No |
@@ -35,7 +35,7 @@ Every decision in Liyagent is made by one of three kinds of engine. Knowing whic
 | Engine | How it decides | Examples | Cost |
 | --- | --- | --- | --- |
 | **Rules** | Deterministic tables and thresholds. The same input always gives the same output. | Liya Classify's rule table, the routing table, SLA hours, duplicate thresholds | No model spend |
-| **Rules + model** | Rules decide first; a model pass refines the result off the critical path and can be switched off without breaking the pipeline. | Liya Classify followed by Liya Triage | Only the refinement pass |
+| **Rules + model** | Rules decide first. A model pass refines the result off the critical path and can be switched off without breaking the pipeline. | Liya Classify followed by Liya Triage | Only the refinement pass |
 | **Model** | A language model decides, through the gateway, with guardrails, budgets and fallback. | Liya, Liya Scribe, managed agents you create | Metered per call |
 
 > [!NOTE]
@@ -43,7 +43,7 @@ Every decision in Liyagent is made by one of three kinds of engine. Knowing whic
 
 ## Managed and self-managed agents
 
-- A **managed** agent runs inside Liyagent: its instructions, model binding, MCP tools, sub-agents and run limits live in the console, and it can be started and stopped there. It runs **as the agent** (its own permissions) or **as the invoker** (the agent's permissions and the signed-in person's, both checked); an agent that uses a per-user connector must run as the invoker. See [Instructions and model](/docs/agents/instructions-model#run-as).
+- A **managed** agent runs inside Liyagent: its instructions, model binding, MCP tools, sub-agents and run limits live in the console, and it can be started and stopped there. It runs **as the agent** (its own permissions) or **as the invoker** (the agent's permissions and the signed-in person's, both checked). An agent that uses a per-user connector must run as the invoker. See [Instructions and model](/docs/agents/instructions-model#run-as).
 - A **self-managed** agent runs on your infrastructure. It gets a credential and points its OpenAI-compatible client at the gateway, so its model calls are still governed and metered.
 
 ## Triggers
@@ -52,7 +52,7 @@ A trigger is an inbound channel bound to one agent: `webhook`, `teams`, `slack`,
 
 ## Tenants
 
-A tenant is a slice of one instance: its own sources, tickets, knowledge, budgets and settings. A ticket belongs to the tenant of the source it came in through. Users are granted specific tenants (or `*`); owners see every tenant. Separation is enforced on the server over one shared database, and per-tenant encryption keys can be turned on so a retired tenant's data can be crypto-shredded. See [Tenancy](/docs/govern/tenancy).
+A tenant is a slice of one instance: its own sources, tickets, knowledge, budgets and settings. A ticket belongs to the tenant of the source it came in through. Users are granted specific tenants (or `*`), and owners see every tenant. Separation is enforced on the server over one shared database, and per-tenant encryption keys can be turned on so a retired tenant's data can be crypto-shredded. See [Tenancy](/docs/govern/tenancy).
 
 ## The gateway
 

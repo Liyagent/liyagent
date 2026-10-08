@@ -7,13 +7,13 @@ outcomes: Add a remote or managed MCP server from the catalogue; Re-pin a tool w
 
 ## Managed and remote servers
 
-- **Managed** servers are implemented inside Liyagent against the vendor's own API, so there is no separate MCP server to host. The catalogue has dozens, among them Jira, ServiceNow, Zendesk, Salesforce, SAP S/4HANA, Microsoft Teams, Gmail, SharePoint, AWS S3, Grafana, MongoDB, Neo4j and Dynamics 365. You supply the address and credentials; Liyagent runs the server.
+- **Managed** servers are implemented inside Liyagent against the vendor's own API, so there is no separate MCP server to host. The catalogue has dozens, among them Jira, ServiceNow, Zendesk, Salesforce, SAP S/4HANA, Microsoft Teams, Gmail, SharePoint, AWS S3, Grafana, MongoDB, Neo4j and Dynamics 365. You supply the address and credentials, and Liyagent runs the server.
 - **Remote** servers are any MCP server you can reach over the network. The catalogue has cards for some (for example GitHub, Notion, Linear, Sentry, PagerDuty, the SAP MCP Gateway and Salesforce's hosted MCP servers), and you can add any other by URL.
 
 ## Add a server
 
 1. Open **MCP servers** and choose **Add MCP server**. Pick a catalogue card, or add one by URL.
-2. Choose how the server authenticates. A managed card offers the credential types its vendor accepts, such as **API key**, **Basic Auth**, **AWS access key**, **App (client credentials)** or **User OAuth**; some vendors (Salesforce, Gmail, SharePoint and others) accept only **User OAuth**. A remote server offers:
+2. Choose how the server authenticates. A managed card offers the credential types its vendor accepts, such as **API key**, **Basic Auth**, **AWS access key**, **App (client credentials)** or **User OAuth**. Some vendors (Salesforce, Gmail, SharePoint and others) accept only **User OAuth**. A remote server offers:
 
    | Auth option | Use for |
    | --- | --- |
@@ -40,7 +40,7 @@ outcomes: Add a remote or managed MCP server from the catalogue; Re-pin a tool w
 
 ## Data policies
 
-Data policies filter what goes into and comes out of a server's tools. Edit them on the server's page and choose **Save policies** ("Saved — enforced on the next call"). Preview a policy against sample data with `POST .../data-policies/preview`, run it in shadow first and check its hits (`GET .../data-policies/{policy_name}/shadow-hits`) before promoting it (`POST .../data-policies/{policy_name}/promote`).
+Data policies filter what goes into and comes out of a server's tools. Edit them on the server's page and choose **Save policies** (`Saved — enforced on the next call`). Preview a policy against sample data with `POST .../data-policies/preview`, run it in shadow first and check its hits (`GET .../data-policies/{policy_name}/shadow-hits`) before promoting it (`POST .../data-policies/{policy_name}/promote`).
 
 ## Next steps
 

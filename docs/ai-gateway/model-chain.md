@@ -66,10 +66,10 @@ One agent can run its two kinds of call on different models with `routes`: `plan
 }
 ```
 
-A route is held to the same rules as a fallback entry: its provider switched on, its model allowed, the tenant's residency. When the route's model does not answer — a 429 when a daily quota is spent, a 5xx, a timeout, an open circuit — the call walks the route's own `fallbacks`, or, when it names none, the binding and then the binding's chain. A route refused where it points runs the call on the binding.
+A route is held to the same rules as a fallback entry: its provider switched on, its model allowed, the tenant's residency. When the route's model does not answer (a 429 when a daily quota is spent, a 5xx, a timeout, an open circuit), the call walks the route's own `fallbacks`, or, when it names none, the binding and then the binding's chain. A route refused where it points runs the call on the binding.
 
 > [!TIP]
-> A budget can also re-route to a cheaper model when it is reached. That is separate from this chain; see [Budgets](/docs/ai-gateway/budgets).
+> A budget can also re-route to a cheaper model when it is reached. That is separate from this chain. See [Budgets](/docs/ai-gateway/budgets).
 
 ## Next steps
 

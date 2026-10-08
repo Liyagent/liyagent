@@ -19,7 +19,7 @@ Liya asks you to confirm an SAP call only when the policy or a change to your da
 | The agent decides to **write** | One Confirm card | One Confirm card |
 | You click a **read** button under a result, or send a starter prompt | Runs, no card | Runs, no card |
 | You click a **write** button under a result | One Confirm card | One Confirm card |
-| A schedule, trigger, group chat or another app | Refused | Reads run; writes are refused |
+| A schedule, trigger, group chat or another app | Refused | Reads run, but writes are refused |
 | A read routine you set up and confirmed in Teams | Runs the confirmed read, no card | Not offered: routines run only through Liya's own SAP connectors |
 | A routine whose call writes | One Confirm card on each run | Not offered |
 
@@ -43,8 +43,8 @@ Liya applies the policy as follows:
 
 A button's payload is signed with HMAC-SHA256, using a key derived for this purpose alone. The payload is bound to you, to the assistant and to the connection, and it expires after two hours. Liya runs nothing when:
 
-- the button was forged or altered;
-- the button has expired; you see *that button has expired — ask again*;
+- the button was forged or altered.
+- the button has expired. You see `that button has expired — ask again`.
 - the button was made for someone else, or for another assistant.
 
 When you click, Liya looks up again whether the call reads or writes. It uses the connector's own catalogue, or the gateway server's pinned tool hints, and never trusts the button's payload for this.

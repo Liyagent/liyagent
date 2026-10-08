@@ -18,8 +18,8 @@ A deploy used to recreate the single app container, which left 30-60 seconds of 
 5. **Switches Caddy.** It renders the Caddyfile with the new colour listed first and runs `caddy reload`. A reload is graceful: requests already in flight finish, and every new request goes to the new colour. If Caddy refuses the file, the old Caddyfile is put back and the deploy rolls back as in step 4.
 6. **Records the new colour as live** in `bluegreen.json`. This is written atomically, and before anything irreversible happens.
 7. **Drains the old colour** with `docker compose stop -t 150`. On SIGTERM the old process:
-   - stops taking Teams inbox work at once;
-   - gives open requests up to 90 s (`TICKETIQ_GRACEFUL_SHUTDOWN_S`), then Teams turns up to 45 s (`TICKETIQ_TEAMS_QUEUE_DRAIN_S`);
+   - stops taking Teams inbox work at once.
+   - gives open requests up to 90 s (`TICKETIQ_GRACEFUL_SHUTDOWN_S`), then Teams turns up to 45 s (`TICKETIQ_TEAMS_QUEUE_DRAIN_S`).
    - releases its advisory locks.
 
    Within about 10 s the new process takes the instance lock and the scheduler.

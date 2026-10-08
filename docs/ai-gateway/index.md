@@ -31,7 +31,7 @@ The Anthropic endpoint translates each Messages request into the same governed c
 What it does not carry:
 
 - **Anthropic's server-side tools** (web search, code execution) run on Anthropic's servers, which a governed call never reaches. They are left out of the request and named in the `X-TicketIQ-Dropped-Tools` response header.
-- **Thinking blocks** in the conversation are dropped; only the model that wrote them can read them back. Sampling settings (temperature, stop sequences, the thinking budget) are the binding's to decide.
+- **Thinking blocks** in the conversation are dropped, because only the model that wrote them can read them back. Sampling settings (temperature, stop sequences, the thinking budget) are the binding's to decide.
 - **Any other block** (a PDF document, a server tool's result) is refused with a `422`, rather than dropped without a guardrail reading it.
 - **count_tokens** answers an estimate, about four characters a token: the agent may run on a model whose tokenizer the gateway cannot run.
 

@@ -2,7 +2,7 @@
 title: liya command summary
 nav_title: Command summary
 order: 3
-summary: Every liya command and its main options, on one page.
+summary: Every liya command and its main options on one page: global flags, environments, agents, tickets, models, guardrails and more.
 ---
 
 `liya` is installed from the TicketIQ repository (see [Install liya](/docs/reference/install-liya)). For every flag, see the [generated command reference](/docs/cli/reference).
@@ -11,7 +11,7 @@ summary: Every liya command and its main options, on one page.
 
 | Option | Meaning |
 | --- | --- |
-| `-o table\|json\|yaml` | Output format; `table` by default, or `LIYA_OUTPUT` |
+| `-o table\|json\|yaml` | Output format: `table` by default, or `LIYA_OUTPUT` |
 | `--env <name>` / `--url <url>` | Run against another environment or instance |
 | `--timeout <s>` | HTTP timeout |
 | `--no-color` | No colour (also `NO_COLOR`) |
@@ -41,7 +41,7 @@ summary: Every liya command and its main options, on one page.
 | `liya doctor` | Diagnose the CLI's setup and connection |
 | `liya apply -f <path>` / `liya export -o <dir>` | GitOps: apply files, export live resources |
 | `liya run claude` | Start Claude Code with its model calls through the AI gateway |
-| `liya version` / `completion` | Versions; a shell completion script |
+| `liya version` / `completion` | Versions, and a shell completion script |
 
 ## tiq verbs through liya
 

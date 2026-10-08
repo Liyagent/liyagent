@@ -22,7 +22,7 @@ outcomes: Create a guardrail from the PII protection template; Test it against s
 
    | Field | Value for this guide |
    | --- | --- |
-   | Rollout | **Monitor first — recommended** |
+   | Rollout | **Monitor first (recommended)** |
    | Direction | Both |
    | Agents | Blank for all agents, or name one |
 
@@ -39,7 +39,7 @@ outcomes: Create a guardrail from the PII protection template; Test it against s
 6. For an identifier of your own, for example an employee number `EMP-\d{6}`, create a second guardrail of kind **Custom patterns** with action **Mask**.
 7. Test it: in the **Dry run** panel on **Guardrail rules**, enter `Reset the laptop for jane.doe@example.com, badge EMP-104233` and choose **Run against enabled policies**. The result shows what each policy, including those in monitor mode, would do and the text after it. See [Test a guardrail](/docs/ai-gateway/test-guardrail).
 8. To hold one agent to it, choose **+ Bind an agent** under **Per-agent bindings**, tick the guardrail and choose **Create binding**. Left with no agents named, it already covers every agent.
-9. Send a few real messages. In monitor mode its matches are listed for review; mark each **False positive** or **Correct**.
+9. Send a few real messages. In monitor mode its matches are listed for review. Mark each **False positive** or **Correct**.
 10. When the matches look right, choose **Enforce now** on its row.
 
 > [!WARNING]

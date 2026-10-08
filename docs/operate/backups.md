@@ -18,7 +18,7 @@ outcomes: Take and verify a backup; Restore a snapshot; Set how long and how man
 The vault key is not in the backup when `TICKETIQ_VAULT_KEY` is set in the environment file.
 
 > [!NOTE]
-> Only the bundled `postgres` service is backed up. If `TICKETIQ_DB_URL` points at an external database (RDS, Cloud SQL), every command refuses; use the provider's snapshots or point-in-time recovery instead.
+> Only the bundled `postgres` service is backed up. If `TICKETIQ_DB_URL` points at an external database (RDS, Cloud SQL), every command refuses. Use the provider's snapshots or point-in-time recovery instead.
 
 ## Commands
 
@@ -50,7 +50,7 @@ Both limits apply together. Both must be whole numbers, or the script exits befo
 BACKUP_KEEP=7
 ```
 
-`BACKUP_RETENTION_DAYS` is not read from `.env.vm`; set it in the environment of the command (or the cron line) to change it.
+`BACKUP_RETENTION_DAYS` is not read from `.env.vm`. Set it in the environment of the command (or the cron line) to change it.
 
 ## Next steps
 

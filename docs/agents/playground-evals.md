@@ -20,20 +20,20 @@ Simulated users (`/api/agents/{key}/simulations`) let a model play a user with a
 
 ### Attach files
 
-**Attach** (or drop or paste) up to 5 files on a message. Each is uploaded as soon as you pick it, with `POST /api/agents/{key}/playground/files`, and shows its preview or the reason it was refused; **Send** waits until every file has uploaded.
+**Attach** (or drop or paste) up to 5 files on a message. Each is uploaded as soon as you pick it, with `POST /api/agents/{key}/playground/files`, and shows its preview or the reason it was refused. **Send** waits until every file has uploaded.
 
 | | |
 | --- | --- |
 | Images | PNG, JPEG, GIF or WebP, up to 5 MB. Sent to the model as an image |
 | Documents | PDF, Word, Excel, PowerPoint, text, Markdown, CSV, TSV, JSON, log, XML, YAML, and zip or gzip archives, up to 10 MB. The agent is given the text read from them, marked as data you supplied |
 
-A file's contents must match its name, and programs and scripts are refused whatever they are called. Archives are read under the same bounded extraction as email attachments, so a decompression bomb cannot exhaust the server. A document with no readable text (a scanned PDF, an empty file) is refused, since the agent could not use it. Files are kept for 7 days, or until their session is deleted, and only you can open yours; a reopened session shows each message's files and says which have expired.
+A file's contents must match its name, and programs and scripts are refused whatever they are called. Archives are read under the same bounded extraction as email attachments, so a decompression bomb cannot exhaust the server. A document with no readable text (a scanned PDF, an empty file) is refused, since the agent could not use it. Files are kept for 7 days, or until their session is deleted, and only you can open yours. A reopened session shows each message's files and says which have expired.
 
 ### What else the Playground shows
 
-- **Tables and charts** in replies, when the agent's instructions say how to write them; see [Tables and charts in replies](/docs/agents/instructions-model#tables-and-charts-in-replies).
-- **Outputs**: the charts, tables and code the agent wrote, results its tools kept for you and resources they returned, each downloadable, and the sources it used — links it cited and tools it read — each tied to its turn.
-- **Requests waiting for you**: an approval, a connection, an answer or a form an MCP server sent is pinned above the message box, asked one question at a time. A send that fails keeps what you typed; once settled, a request folds into one line in its turn as answered or declined.
+- **Tables and charts** in replies, when the agent's instructions say how to write them. See [Tables and charts in replies](/docs/agents/instructions-model#tables-and-charts-in-replies).
+- **Outputs**: the charts, tables and code the agent wrote, results its tools kept for you and resources they returned, each downloadable, and the sources it used (links it cited and tools it read), each tied to its turn.
+- **Requests waiting for you**: an approval, a connection, an answer or a form an MCP server sent is pinned above the message box, asked one question at a time. A send that fails keeps what you typed. Once settled, a request folds into one line in its turn as answered or declined.
 - **Context**: an estimate of what the next request will carry, against the model's input and output limits from the model catalogue, kept apart from the token counts the provider reported.
 
 ## Datasets
@@ -48,7 +48,7 @@ Datasets are versioned and append-only. Each has a kind:
 
 Create one from **Agents › Evaluations** or with the API:
 
-1. `POST /api/evals/datasets` with a name, a kind and its cases, as `items` or as JSONL text in `jsonl`. Posting again writes the next version; `append: true` adds to the latest instead of replacing it.
+1. `POST /api/evals/datasets` with a name, a kind and its cases, as `items` or as JSONL text in `jsonl`. Posting again writes the next version, but `append: true` adds to the latest instead of replacing it.
 2. Add cases from a transcript (`POST /api/evals/datasets/{name}/from-transcript`, redacted), or from tickets (`.../from-tickets`).
 3. Optionally split it into calibrate and holdout sets with a fixed seed (`.../split`).
 
@@ -69,39 +69,39 @@ Evaluators (`/api/evals/evaluators`) include built-in checks and LLM-judge evalu
 
 | Target | What it measures |
 | --- | --- |
-| `guardrails` | Each attempt screened by the agent's own guardrails. No model is called; a run takes seconds. |
+| `guardrails` | Each attempt screened by the agent's own guardrails. No model is called, so a run takes seconds. |
 | `agent` | Each attempt asked of the agent through the governed path, and its answer judged. Needs `transcripts.content.read`. |
 
-A run records the configuration it measured: the agent's version fingerprint. Successes in **PII exfiltration** and **tool abuse** are *critical* findings; the report counts them.
+A run records the configuration it measured: the agent's version fingerprint. Successes in **PII exfiltration** and **tool abuse** are *critical* findings, and the report counts them.
 
 1. Start a run from the page, or with `POST /api/redteam/runs` (`governance.write`) naming the agent, the target and optionally a subset of categories, transforms and vectors.
 2. Open it on **Agents › Red teaming**. Compared with the latest earlier run, it lists the attacks that newly get through.
 3. Export the attempts with `GET /api/redteam/runs/{run_id}?format=csv`.
 
 > [!TIP]
-> In CI, `python -m ticketiq.redteam --agent <id> --max-asr 0.1` exits 1 when the ASR is over the bar; add `--baseline latest` to fail on a rise against the last run as well.
+> In CI, `python -m ticketiq.redteam --agent <id> --max-asr 0.1` exits 1 when the ASR is over the bar. Add `--baseline latest` to fail on a rise against the last run as well.
 
 ### Release gate
 
 With the release gate on, an agent configuration is released only after a red-team run of exactly that configuration passed. These are refused with `409` (`code: redteam_gate`) until it has:
 
-- restoring a version (`POST /api/agents/{key}/versions/{id}/restore`);
-- promoting a candidate that restores a version or adopts an optimizer proposal (`POST /api/settings/candidates/{id}/promote`);
+- restoring a version (`POST /api/agents/{key}/versions/{id}/restore`)
+- promoting a candidate that restores a version or adopts an optimizer proposal (`POST /api/settings/candidates/{id}/promote`)
 - publishing the agent's card for the first time (`PUT /api/agents/{key}/spec`).
 
 The refusal names each failed criterion and links the run it judged. The criteria:
 
 | Setting | Default | The release passes when |
 | --- | --- | --- |
-| `required` | off | — (the gate is on) |
+| `required` | off | Not applicable (the gate is on) |
 | `max_asr` | 0.1 | the run's overall ASR is at most this |
 | `no_critical` | on | no PII-exfiltration or tool-abuse attack got through |
 | `max_age_days` | 14 | the run finished at most this many days ago |
 | `target` | `any` | the run's target is this (`guardrails`, `agent`) |
 
-The run must be of the configuration being released: its fingerprint is the agent's version snapshot without the card, so publishing a card does not void the run made just before it. The newest completed run of that configuration is the one judged. An optimizer proposal has never been in force, so no run can have measured it; with the gate on it is adopted only through an override. Agents a run cannot target (the built-in pipeline steps) are outside the gate.
+The run must be of the configuration being released: its fingerprint is the agent's version snapshot without the card, so publishing a card does not void the run made just before it. The newest completed run of that configuration is the one judged. An optimizer proposal has never been in force, so no run can have measured it. With the gate on, it is adopted only through an override. Agents a run cannot target (the built-in pipeline steps) are outside the gate.
 
-Set the organisation default on **Agents › Red teaming** (`PUT /api/redteam/gate`), and an agent's own policy on its **History** tab (`PUT /api/agents/{key}/redteam-gate`, or `{"inherit": true}` to follow the default again). Both need `governance.write`; loosening a gate that is on also needs `governance.weaken` and a reason. The History tab shows whether the agent's current configuration would pass.
+Set the organisation default on **Agents › Red teaming** (`PUT /api/redteam/gate`), and an agent's own policy on its **History** tab (`PUT /api/agents/{key}/redteam-gate`, or `{"inherit": true}` to follow the default again). Both need `governance.write`. Loosening a gate that is on also needs `governance.weaken` and a reason. The History tab shows whether the agent's current configuration would pass.
 
 An owner can release past a refusal: send `override_redteam_gate: true` and a `reason` with the release. It needs `governance.weaken`, and is audited as `redteam.gate.override` with the criteria that failed. Refusals are audited as `redteam.gate.refused`.
 

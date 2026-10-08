@@ -15,7 +15,7 @@ outcomes: Create a managed agent with instructions; Add a sub-agent with its own
 
 ## Steps
 
-1. Open **All agents** → **+ Create agent** and choose **Managed by Liyagent**. Name it `HR helper`; the agent id shown under the name becomes `hr-helper`. Under **Tags**, enter `team=hr`.
+1. Open **All agents** → **+ Create agent** and choose **Managed by Liyagent**. Name it `HR helper`. The agent ID shown under the name becomes `hr-helper`. Under **Tags**, enter `team=hr`.
 2. Pick a provider and model under **Model**, then write the **Instructions**:
 
    ```markdown

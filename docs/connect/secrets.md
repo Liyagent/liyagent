@@ -17,7 +17,7 @@ outcomes: Create a secret and reference it from a provider or trigger; Rotate a 
 
    | Field | Notes |
    | --- | --- |
-   | ID | How resources refer to this value, for example `JIRA_API_TOKEN`. Letters, numbers, slashes, underscores and hyphens; it is uppercased and can't be changed later. |
+   | ID | How resources refer to this value, for example `JIRA_API_TOKEN`. Letters, numbers, slashes, underscores and hyphens. It is uppercased and can't be changed later. |
    | Value | The secret itself, single line or multiline. Write-only. |
    | Labels | Optional key/value pairs for finding and filtering secrets. |
 

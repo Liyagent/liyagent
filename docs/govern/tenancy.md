@@ -7,7 +7,7 @@ outcomes: Create a tenant and bind sources to it; Grant users access to tenants;
 
 ## How separation works
 
-- A tenant owns **sources**. A ticket belongs to the tenant of the source it arrived through; a ticket filed in the console belongs to the caller's selected tenant.
+- A tenant owns **sources**. A ticket belongs to the tenant of the source it arrived through. A ticket filed in the console belongs to the caller's selected tenant.
 - Users are granted specific tenants, or `*`. Owners see every tenant.
 - Reads and writes are scoped by tenant on the server, over one shared database. Cedar policies can also test the tenant.
 - Budgets, the semantic cache, the learned taxonomy, retention windows and data residency can differ per tenant.
@@ -21,7 +21,7 @@ outcomes: Create a tenant and bind sources to it; Grant users access to tenants;
    | --- | --- |
    | name | Display name |
    | about | Description |
-   | region | A free-text note of where its data lives; not enforced |
+   | region | A free-text note of where its data lives. It is not enforced |
    | residency_region | Enforced: an ISO code such as `DE`, or `EU`. Model calls and embeddings for the tenant stay in that geography or are refused |
    | no_cross_geo | Also refuse cross-region routing inside the geography |
    | environment | For example `production` (the default) or `test` |

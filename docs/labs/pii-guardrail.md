@@ -16,7 +16,7 @@ outcomes: Create a guardrail from a template; Preview it on sample sentences; Mo
 ## Steps
 
 1. Open **Guardrail rules** → **Create guardrail** and pick the **PII protection** template (direction **both**, action **mask**). Name it `pii-lab`.
-2. Under **Rollout**, keep **Monitor first — recommended**. Under **Scope** → **Agents**, enter the agent's id, or leave it blank for every agent. Choose **Create guardrail**.
+2. Under **Rollout**, keep **Monitor first (recommended)**. Under **Scope** → **Agents**, enter the agent's id, or leave it blank for every agent. Choose **Create guardrail**.
 3. Create a second rule for the employee number: **Create guardrail** → **Start blank**, name `pii-lab-emp`, policy **Custom patterns**. Choose **+ Add pattern**: name `employee-number`, pattern `EMP-[0-9]{6}`, **Mask**. Keep **Monitor first** and create it.
 4. In the test panel on the **Guardrail rules** list, enter `Please reset MFA for sam@example.com, EMP-204511, phone +44 20 7946 0000` and choose **Run against enabled policies**. The email and phone number come from `pii-lab`, and the employee number from `pii-lab-emp`.
 5. Send the same sentence to the agent on its **Playground** tab. The answer is unchanged (monitor mode), but the audit log has findings.

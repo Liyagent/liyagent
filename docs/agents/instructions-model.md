@@ -21,7 +21,7 @@ Instructions are the agent's standing brief, applied ahead of every governed cal
 
 ## Tables and charts in replies
 
-The Playground draws two things in a reply beyond prose: Markdown pipe tables, and charts. An agent writes them only when its instructions say how. In the instructions editor, **+ Tables & charts guidance** appends a paragraph that teaches the format; edit it to suit the agent.
+The Playground draws two things in a reply beyond prose: Markdown pipe tables, and charts. An agent writes them only when its instructions say how. In the instructions editor, **+ Tables & charts guidance** appends a paragraph that teaches the format. Edit it to suit the agent.
 
 A chart is a fenced code block tagged `chart` that holds one JSON object:
 
@@ -46,7 +46,7 @@ Limits: 60 labels for bar and line charts, 12 slices for a pie, 500 points for a
 1. On the agent's **Settings** tab, in the **Model** section, pick a provider (or **Global backend**) and a model id, and choose **Override**. A sub-agent of Liya can choose **Inherit from Liya** instead.
 2. For the output token cap, reasoning effort, timeout, the two switches below and the fallback lists, open **AI Gateway › Provider bindings** and choose **Bind** on the agent's row.
 
-Both call `PUT /api/agents/{key}`; a field you leave out keeps its stored value.
+Both call `PUT /api/agents/{key}`. A field you leave out keeps its stored value.
 
 | Field | Meaning |
 | --- | --- |
@@ -57,25 +57,25 @@ Both call `PUT /api/agents/{key}`; a field you leave out keeps its stored value.
 | `strict_binding` | If the provider is deleted, switch the binding off instead of moving the agent to the global backend |
 | `refuse_unpriced` | While the agent has a USD budget, refuse a model with no price, whose calls the budget could never stop |
 
-Fallback lists live on the same binding; see [Model chain and fallback](/docs/ai-gateway/model-chain).
+Fallback lists live on the same binding. See [Model chain and fallback](/docs/ai-gateway/model-chain).
 
 > [!TIP]
 > To compare two models on live traffic before switching, add an arm and promote the winner with `POST /api/agents/{key}/arms/{arm}/promote`.
 
 ## Run limits for managed agents
 
-A managed agent's runtime is on its **Settings** tab, in the **Tools** section: its MCP servers, **Run as**, the limits below and its sub-agents, saved together with **Save runtime**. It maps to `PUT /api/agents/{key}/runtime`; check a draft with `POST /api/agents/{key}/runtime/check`.
+A managed agent's runtime is on its **Settings** tab, in the **Tools** section: its MCP servers, **Run as**, the limits below and its sub-agents, saved together with **Save runtime**. It maps to `PUT /api/agents/{key}/runtime`. Check a draft with `POST /api/agents/{key}/runtime/check`.
 
 | Field | What it limits | Default (maximum) |
 | --- | --- | --- |
-| Max iterations | Model calls per request; the loop always ends | 10 (100) |
+| Max iterations | Model calls per request (the loop always ends) | 10 (100) |
 | Parallel tool calls | Independent MCP calls of one model step sent at once | Off, one at a time (4) |
 | Delegation depth | Hops of registered agents a delegation may go from here | 3 (5) |
 | Wall-clock deadline (s) | Total run time | 300 (3600) |
 | Tool calls per run | Across the agent and its sub-agents | 50 (500) |
 | Tool calls per model step | Tool calls one model step may ask for | 8 (32) |
 | Delegations per run | Sub-agent calls in one run | 8 (64) |
-| Identical tool calls per run | The same tool with the same arguments; stops loops | 3 (50) |
+| Identical tool calls per run | The same tool with the same arguments (stops loops) | 3 (50) |
 | Token ceiling per run | Tokens across the whole run | Off (10,000,000) |
 | USD ceiling per run | Cost across the whole run | Off (1,000) |
 
@@ -99,10 +99,10 @@ A run that reaches a limit ends with "run limit: …" naming it. Start and stop 
 A write tool call can be held for a person to approve before it is sent. Each MCP server has a posture for its agents' writes (`agent_writes`: `allow`, `require_approval` or `deny`), with per-tool overrides:
 
 - A server added from now on starts at **require approval** for writes.
-- Some managed-connector tools (ordering from a catalogue, starting a flow) ask for approval whatever the server's default; only a per-tool override lets them through unseen.
+- Some managed-connector tools (ordering from a catalogue, starting a flow) ask for approval whatever the server's default. Only a per-tool override lets them through unseen.
 - A server saved before postures existed keeps allowing writes until you change it.
 
-Held calls wait in the **Inbox** under **Approvals**. Only an agent's call is held; a person calling a tool from the console is not. See [Agent permissions](/docs/govern/permissions).
+Held calls wait in the **Inbox** under **Approvals**. Only an agent's call is held. A person calling a tool from the console is not. See [Agent permissions](/docs/govern/permissions).
 
 ## Replies that claim a call that was not made
 

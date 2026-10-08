@@ -7,7 +7,7 @@ outcomes: Explain guardrails, sets and bindings; Choose an action for a finding;
 ---
 
 > [!PREVIEW]
-> The console has two guardrail pages. **Guardrail rules** is the per-rule console this page describes (the `/api/guardrails` API). **Guardrails** is a newer page for named guardrails attached to LLM providers and agents (the `/api/guardrail-profiles` API), with its own templates, a **Start disabled** or **Enforce now** rollout and a **Run test** panel; evaluating with an external provider there is marked coming soon.
+> The console has two guardrail pages. **Guardrail rules** is the per-rule console this page describes (the `/api/guardrails` API). **Guardrails** is a newer page for named guardrails attached to LLM providers and agents (the `/api/guardrail-profiles` API), with its own templates, a **Start disabled** or **Enforce now** rollout and a **Run test** panel. Evaluating with an external provider there is marked coming soon.
 
 ## Building blocks
 
@@ -31,7 +31,7 @@ Which actions are offered depends on the kind of check.
 | Mask | Replace the match with a fixed mark |
 | Tokenise | For PII: replace the match with a token instead of a mark |
 | Flag for a person | For deny topics: let it through and put it on the record for review |
-| Escalate to a person | File it to a person as a ticket. For deny topics the text is refused; for content safety incoming text goes on, flagged, and a reply is withheld |
+| Escalate to a person | File it to a person as a ticket. For deny topics the text is refused. For content safety, incoming text goes on, flagged, and a reply is withheld |
 | Detect only | For content safety: record a finding, change nothing |
 | Don't check | For deny topics: skip this topic on that side |
 
@@ -42,7 +42,7 @@ Which actions are offered depends on the kind of check.
 
 ## Rollout
 
-New guardrails can start in **Monitor first — recommended**: findings are recorded but nothing is blocked. Review its matches (mark each **False positive** or **Correct**; `POST /api/guardrails/{name}/monitor` records the label), then choose **Enforce now** on its row (`PATCH /api/guardrails/{name}` with `"mode": "enforce"`). `GET /api/guardrails/{name}/used-by` shows where a guardrail is in effect before you change it.
+New guardrails can start in **Monitor first (recommended)**. Findings are recorded but nothing is blocked. Review its matches (mark each **False positive** or **Correct**, and `POST /api/guardrails/{name}/monitor` records the label), then choose **Enforce now** on its row (`PATCH /api/guardrails/{name}` with `"mode": "enforce"`). `GET /api/guardrails/{name}/used-by` shows where a guardrail is in effect before you change it.
 
 ## Next steps
 

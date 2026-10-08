@@ -33,9 +33,9 @@ Save the client secret, or the PEM certificate and key, in the [secrets store](/
    | Microsoft App ID | The bot's app id (a GUID) |
    | Directory (tenant) ID | Your Entra tenant id |
    | Client secret (from the Secrets store) | `secret://teams-bot-secret` |
-   | Certificate and private key (from the Secrets store) | Use instead of the client secret; not both |
+   | Certificate and private key (from the Secrets store) | Use instead of the client secret, not both |
 
-2. Save. Incoming messages are accepted only with a valid Bot Framework token; replies go only to Microsoft conversation hosts.
+2. Save. Incoming messages are accepted only with a valid Bot Framework token. Replies go only to Microsoft conversation hosts.
 
 ## 4. Build the app package
 
@@ -52,7 +52,7 @@ Offline, `python deploy/teams/build-package.py --app-id <id> --bot-app-id <bot i
 ## 5. Upload and test
 
 1. In the Teams admin center, upload the zip as a custom app (`deploy/teams/UPLOAD.md` walks through it), or sideload it for yourself.
-2. Open a chat with Liya and ask a question. A known issue arrives as a card; a new problem becomes a ticket.
+2. Open a chat with Liya and ask a question. A known issue arrives as a card, and a new problem becomes a ticket.
 
 > [!WARNING]
 > Keep the app `id` stable across versions. A new id is a different app to Teams, and users lose their chat history with the bot.

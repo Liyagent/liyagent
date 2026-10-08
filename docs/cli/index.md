@@ -1,7 +1,7 @@
 ---
 title: liya CLI
 order: 1
-summary: Install liya, the Liyagent command line, and run your first commands.
+summary: Install liya, the Liyagent command line, and manage agents, tickets, models, guardrails, policies and the audit log from your terminal.
 ---
 
 `liya` is the official command line for Liyagent and TicketIQ. It covers agents, tickets, triggers, LLM providers and models, guardrails, secrets, Cedar policies, the audit log, budgets, connectors and the knowledge base, and it can export and apply the whole configuration as YAML.
@@ -87,7 +87,7 @@ It sets `ANTHROPIC_BASE_URL` to the instance's Anthropic endpoint (`/api/gateway
 
 Claude Code's own settings apply over the environment it is started with, so a setting that would send calls somewhere else stops the launch before it starts (exit `2`), naming the file:
 
-- `CLAUDE_CODE_USE_VERTEX`, `CLAUDE_CODE_USE_BEDROCK` or `CLAUDE_CODE_USE_FOUNDRY` in `~/.claude/settings.json`, the project's `.claude/settings.json` or `.claude/settings.local.json`, or the managed settings file — unless that file's own `ANTHROPIC_VERTEX_BASE_URL` (or the Bedrock or Foundry one) points at this instance's gateway;
+- `CLAUDE_CODE_USE_VERTEX`, `CLAUDE_CODE_USE_BEDROCK` or `CLAUDE_CODE_USE_FOUNDRY` in `~/.claude/settings.json`, the project's `.claude/settings.json` or `.claude/settings.local.json`, or the managed settings file, unless that file's own `ANTHROPIC_VERTEX_BASE_URL` (or the Bedrock or Foundry one) points at this instance's gateway.
 - an `ANTHROPIC_BASE_URL` of its own in one of those files.
 
 The same variables set only in your shell are not a refusal: Claude Code is started without them, and `liya` says which it left out. An API key or `apiKeyHelper` in a settings file is a warning: Claude Code would send it in place of the agent's token, and the gateway would refuse it.

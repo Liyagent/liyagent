@@ -1,7 +1,7 @@
 ---
 title: Glossary
 order: 5
-summary: Short definitions of the terms used across Liyagent.
+summary: Short definitions of the terms used across Liyagent: agents, bindings, guardrails, breakers, A2A, Cedar policies and more.
 ---
 
 | Term | Meaning |
@@ -22,8 +22,8 @@ summary: Short definitions of the terms used across Liyagent.
 | Run as | Whose permissions a managed agent's tool calls use: the agent's own, or the invoker's as well. |
 | Self-managed agent | An agent running elsewhere that calls the gateway with its own credential. |
 | Semantic cache | Reuse of a verified earlier answer for a question that means the same thing. |
-| Sensitivity label | public, internal, confidential or restricted; limits where an item may be retrieved. |
-| Sub-agent | A specialist a managed agent can delegate to; one defined on the parent spends the parent's budget. |
+| Sensitivity label | public, internal, confidential or restricted. Limits where an item may be retrieved. |
+| Sub-agent | A specialist a managed agent can delegate to. One defined on the parent spends the parent's budget. |
 | Taxonomy | A tenant's categories, default IT or learned from its tickets. |
 | Tenant | A separated slice of one instance with its own data and settings. |
 | Trigger | An inbound channel bound to one agent. |

@@ -21,8 +21,8 @@ outcomes: Register an existing agent as self-managed; Issue it a gateway credent
    | 02 Access | Who may use it: the access policy created with it. |
    | 03 Tags | Under **Advanced**: `key=value` pairs, comma-separated, used for cost chargeback, for example `team=hr,env=prod`. |
 
-3. Choose **Create and issue credentials**. The agent is registered (`PUT /api/gateway/agents/{agent_id}`) and a credential is issued (`POST /api/agents/{agent_id}/credentials`). The page shows its `client_id`, `client_secret`, the token URL and the AI Gateway base URL. **Copy the secret now: it is shown once.** Store it in your agent's secret manager. Credentials last 90 days by default; issue more, or revoke one, on the agent's **Credentials** view (**Create credential**).
-4. In your agent, get an access token with the OAuth client-credentials grant at `POST /api/gateway/oauth/token`. A token lasts one hour; get a new one when it expires.
+3. Choose **Create and issue credentials**. The agent is registered (`PUT /api/gateway/agents/{agent_id}`) and a credential is issued (`POST /api/agents/{agent_id}/credentials`). The page shows its `client_id`, `client_secret`, the token URL and the AI Gateway base URL. **Copy the secret now: it is shown once.** Store it in your agent's secret manager. Credentials last 90 days by default. Issue more, or revoke one, on the agent's **Credentials** view (**Create credential**).
+4. In your agent, get an access token with the OAuth client-credentials grant at `POST /api/gateway/oauth/token`. A token lasts one hour. Get a new one when it expires.
 5. Point the agent's OpenAI client at the gateway: base URL `https://<your-host>/api/gateway/v1`, API key the access token. Chat completions go to `POST /api/gateway/v1/chat/completions`.
 
    ```python

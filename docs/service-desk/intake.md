@@ -28,7 +28,7 @@ curl -X POST https://<host>/api/intake \
 
 | Field | Notes |
 | --- | --- |
-| `title` | Required; an empty title is a 422. |
+| `title` | Required. An empty title is a 422. |
 | `description` | Cleaned of signatures and quoted replies before classification. |
 | `external_id` | Your system's id. Sending the same id again updates that ticket and returns `created: false`. |
 
@@ -41,7 +41,7 @@ Sources pull records in bulk. Manage them at `/api/sources`: `POST /api/sources/
 
 ## Tenancy
 
-A ticket filed from the console lands in the caller's selected tenant; a ticket from a source lands in the tenant that owns the source. See [Tenancy](/docs/govern/tenancy).
+A ticket filed from the console lands in the caller's selected tenant. A ticket from a source lands in the tenant that owns the source. See [Tenancy](/docs/govern/tenancy).
 
 ## Next steps
 

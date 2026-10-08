@@ -16,7 +16,7 @@ Liyagent includes a small SMTP server. Mail it receives lands in an inbox table 
 | `TICKETIQ_MAIL_AUTOSTART` | off | Start with the server |
 | `TICKETIQ_MAIL_AUTO_INGEST` | off | Turn inbox mail into tickets automatically |
 
-Start, stop and test it with `POST /api/mailserver/start`, `/stop` and `/send-test`; ingest the inbox by hand with `POST /api/mailserver/ingest`.
+Start, stop and test it with `POST /api/mailserver/start`, `/stop` and `/send-test`. Ingest the inbox by hand with `POST /api/mailserver/ingest`.
 
 ## An email door for an agent
 
@@ -28,7 +28,7 @@ Mail addressed to an agent's email door becomes a conversation, and the agent re
 4. Deliver mail either to the SMTP listener or by `POST /api/email/inbound/{name}` with the raw RFC 5322 message, signed with the door's signing secret (`X-TicketIQ-Signature` and `X-TicketIQ-Timestamp`).
 
 > [!WARNING]
-> Only trust `Authentication-Results` from your own relays. List their IP addresses in `TICKETIQ_EMAIL_TRUSTED_RELAYS`; mail from any other peer can't satisfy that check.
+> Only trust `Authentication-Results` from your own relays. List their IP addresses in `TICKETIQ_EMAIL_TRUSTED_RELAYS`. Mail from any other peer can't satisfy that check.
 
 ## Outbound relay
 

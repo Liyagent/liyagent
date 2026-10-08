@@ -22,12 +22,12 @@ summary: The default values and hard limits that shape Liyagent's behaviour, in 
 | Delegation depth | 3 by default, at most 5 |
 | Wall-clock deadline per run | 300 seconds by default, at most 3600 |
 | Tool calls per run | 50 by default, at most 500 |
-| Run as | `agent` by default; `invoker` required for per-user connectors |
+| Run as | `agent` by default, `invoker` required for per-user connectors |
 | Agent writes on a newly added MCP server | Require approval |
 | Agent credential lifetime / access token lifetime | 90 days / 1 hour |
-| Playground attachments | 5 files per message; images 5 MB, documents 10 MB; kept 7 days |
+| Playground attachments | 5 files per message (images 5 MB, documents 10 MB), kept 7 days |
 | Webhook HMAC timestamp tolerance | 300 seconds |
-| Loop guard auto-disable | Off; when switched on, after 3 refused windows in a row |
+| Loop guard auto-disable | Off. When switched on, after 3 refused windows in a row |
 
 ## Service desk
 

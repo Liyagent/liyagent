@@ -27,7 +27,7 @@ curl -X POST https://<host>/api/permissions/check -H "Authorization: Bearer $TOK
        "checks":[{"entity":"agent","verb":"update","name":"hr-helper"}]}'
 ```
 
-Leave out `principal` to ask about yourself; asking about another principal (`User`, `Agent` or `Client`) needs `access.read`. Each check names an entity, a verb and optionally a resource name; the answer says allowed or denied for each, and a denial names what denied it.
+Leave out `principal` to ask about yourself. Asking about another principal (`User`, `Agent` or `Client`) needs `access.read`. Each check names an entity, a verb and optionally a resource name. The answer says allowed or denied for each, and a denial names what denied it.
 
 `GET /api/permissions/schema` lists the entity types and actions you can use.
 
@@ -42,16 +42,16 @@ The **Registry** tab records accountability for the agent (`GET /api/agents/{key
 | Intended purpose, out of scope | What it is for and not for |
 | Known issues | Limitations users should know about |
 
-Hand an agent to a new owner with `POST /api/agents/{key}/registry/transfer`; nothing changes hands until they accept it with `POST /api/agents/{key}/registry/transfer/accept`.
+Hand an agent to a new owner with `POST /api/agents/{key}/registry/transfer`. Nothing changes hands until they accept it with `POST /api/agents/{key}/registry/transfer/accept`.
 
 ## Approvals for tool calls
 
 Separately from Cedar, each MCP server sets what an agent's call of a tool gets: **Allow**, **Require approval** (held until a person approves) or **Deny**.
 
-- On a server added from now on, write tools start at **Require approval**; read tools are allowed. A server saved before postures existed keeps allowing writes until you change it.
+- On a server added from now on, write tools start at **Require approval**, and read tools are allowed. A server saved before postures existed keeps allowing writes until you change it.
 - Some managed tools, such as ordering a catalog item or starting a flow, are held for approval whatever the server's default, unless a per-tool override says otherwise.
-- A per-tool override wins, and rules on the arguments can escalate a call to approval or deny it; rules only tighten.
-- Only an agent's calls are held, never a person's own. Approving needs the `agents.approve` permission; each approval is single-use and expires (`TICKETIQ_AGENT_APPROVAL_TTL_S`). Requests are listed at `GET /api/approvals`.
+- A per-tool override wins, and rules on the arguments can escalate a call to approval or deny it. Rules only tighten.
+- Only an agent's calls are held, never a person's own. Approving needs the `agents.approve` permission. Each approval is single-use and expires (`TICKETIQ_AGENT_APPROVAL_TTL_S`). Requests are listed at `GET /api/approvals`.
 
 ## Next steps
 
