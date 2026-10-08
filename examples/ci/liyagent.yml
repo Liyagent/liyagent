@@ -1,37 +1,39 @@
 # Agents as code in GitHub Actions: plan on a pull request, apply on merge.
 #
-# Copy to .github/workflows/ticketiq.yml in the repository that holds your
-# agent bundles (`tiq export AGENT -o agents/AGENT.json` writes one).
+# Copy to .github/workflows/liyagent.yml in the repository that holds your
+# Liyagent resources (`liya export -o ./liyagent` writes them: agents,
+# providers without their secrets, guardrails, policies and triggers, as YAML).
 #
 # Credential: a governance service account, not a person's password.
-#   1. Access → Users: add an account with NO password (say `ci-deployer`) and a
-#      role holding only what the pipeline needs — agents.get, agents.update,
-#      agents.create, policy.create/policy.update to validate policies,
-#      agents.trigger.update to pause triggers, admin.write for replays.
+#   1. In Liyagent, Access → Users: add an account with NO password (say
+#      `ci-deployer`) and a role holding only what the pipeline needs —
+#      agents.get, agents.update, agents.create, policy.create / policy.update.
 #   2. POST /api/service-accounts {"name": "github", "account": "ci-deployer",
-#      "ttl_days": 90} — the response's client_id and client_secret, once.
-#   3. Store `svc/github:<client_secret>` as the repository secret TICKETIQ_TOKEN.
+#      "ttl_days": 90} — the response's client_id and client_secret, shown once.
+#   3. Store `svc/github:<client_secret>` as the repository secret LIYA_TOKEN,
+#      and the instance URL as the repository variable LIYA_URL.
 # It works on an instance where SSO is enforced, is refused if the account is
 # given a password or an owner role, and ends when the service account is deleted.
 #
-# Exit codes (every tiq verb): 0 nothing pending, 2 changes pending / policy
-# invalid, 1 error or refusal.
+# Exit codes: `liya apply --dry-run` exits 5 when changes are pending and 0 when
+# the instance already matches; any `liya` command exits 1 on an error or a
+# refusal. `liya agents eval` exits 0 on pass and 1 on a failure or regression.
 
-name: ticketiq
+name: liyagent
 
 on:
   pull_request:
-    paths: ["agents/**", "policies/**"]
+    paths: ["liyagent/**"]
   push:
     branches: [main]
-    paths: ["agents/**", "policies/**"]
+    paths: ["liyagent/**"]
 
 permissions:
   contents: read
 
 env:
-  TICKETIQ_URL: ${{ vars.TICKETIQ_URL }}
-  TICKETIQ_TOKEN: ${{ secrets.TICKETIQ_TOKEN }}
+  LIYA_URL: ${{ vars.LIYA_URL }}
+  LIYA_TOKEN: ${{ secrets.LIYA_TOKEN }}
 
 jobs:
   plan:
@@ -40,31 +42,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - run: pip install httpx
-      # tiq is one file with no dependency beyond httpx; a checkout of
-      # Liyagent (or a vendored copy of ticketiq/cli.py) provides it.
-      - uses: actions/checkout@v4
-        with: {repository: your-org/ticketiq, path: ticketiq-src}
-      - name: Validate policies
+        with: { python-version: "3.12" }
+      - run: pip install "git+https://github.com/liyagent/liyagent.git"
+      - name: Plan
+        # 5 means "this change would modify the instance" — expected on a pull
+        # request, so it is reported, not failed. 1 (refused or broken) fails.
         run: |
-          for f in policies/*.cedar; do
-            [ -e "$f" ] || continue
-            PYTHONPATH=ticketiq-src python -m ticketiq.cli policy validate --strict "$f"
-          done
-      - name: Plan every bundle
-        # 2 means "this change would modify the instance" — expected on a PR,
-        # so it is reported, not failed; 1 (refused or broken) fails the job.
+          set +e
+          liya apply -f liyagent --dry-run
+          rc=$?
+          set -e
+          if [ "$rc" -eq 1 ]; then exit 1; fi
+      - name: Evaluate the agents this change touches
+        # Gate the change on each agent's own eval set against its pinned
+        # baseline. List the agent ids your repository manages.
         run: |
-          status=0
-          for f in agents/*.json; do
-            set +e
-            PYTHONPATH=ticketiq-src python -m ticketiq.cli plan -f "$f"
-            rc=$?
-            set -e
-            if [ "$rc" -eq 1 ]; then status=1; fi
+          for agent in service-desk hr; do
+            liya agents eval "$agent" --baseline pinned
           done
-          exit $status
 
   apply:
     if: github.event_name == 'push'
@@ -73,18 +68,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - run: pip install httpx
-      - uses: actions/checkout@v4
-        with: {repository: your-org/ticketiq, path: ticketiq-src}
-      - name: Apply every bundle
-        run: |
-          for f in agents/*.json; do
-            PYTHONPATH=ticketiq-src python -m ticketiq.cli apply -f "$f"
-          done
+        with: { python-version: "3.12" }
+      - run: pip install "git+https://github.com/liyagent/liyagent.git"
+      - name: Apply
+        run: liya apply -f liyagent --reason "merged ${{ github.sha }}"
       - name: Drift check
-        # After an apply the instance must match the files: 2 here is drift.
-        run: |
-          for f in agents/*.json; do
-            PYTHONPATH=ticketiq-src python -m ticketiq.cli plan -f "$f"
-          done
+        # After an apply the instance must match the files: 5 here is drift.
+        run: liya apply -f liyagent --dry-run
