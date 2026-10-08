@@ -4,82 +4,129 @@
 
 <h1 align="center">Liyagent</h1>
 
-<p align="center"><strong>Self-hosted AI agents that ask before they act.</strong><br>
-<sub>The <code>liya</code> command line, the audit-bundle verifier, examples and documentation.</sub></p>
+<p align="center">
+  <strong>Self-hosted AI agents that ask before they act.</strong>
+</p>
 
 <p align="center">
-  <a href="https://liyagent.com">Website</a> ·
-  <a href="https://liyagent.com/try">Try it live</a> ·
-  <a href="https://liyagent.com/docs">Documentation</a> ·
-  <a href="https://liyagent.com/docs/cli">CLI guide</a> ·
+  <a href="https://liyagent.com">Website</a> &nbsp;|&nbsp;
+  <a href="https://liyagent.com/try">Live demo</a> &nbsp;|&nbsp;
+  <a href="https://liyagent.com/docs">Documentation</a> &nbsp;|&nbsp;
+  <a href="https://liyagent.com/docs/cli">CLI guide</a> &nbsp;|&nbsp;
   <a href="SECURITY.md">Security</a>
 </p>
 
----
+<br>
 
-[Liyagent](https://liyagent.com) runs AI agents inside the systems a company already uses — IT service desks, HR, SAP, Salesforce, Dynamics 365 and finance — and keeps them accountable: every agent acts as the person who asked, with that person's permissions; writes wait for a person's approval; spend is capped per agent; and every action lands in a hash-chained audit log whose signed exports anyone can verify. It runs on your own infrastructure, with the model you choose.
+## Overview
 
-This repository is the **open part** of Liyagent, under the Apache License 2.0. The platform itself is commercial software that you host yourself; try it without signing up at [liyagent.com/try](https://liyagent.com/try), or write to sales@liyagent.com.
+[Liyagent](https://liyagent.com) runs AI agents inside the business systems a company already uses: IT service desks, HR, SAP, Salesforce, Dynamics 365 and finance.
 
-## What's in this repository
+Every agent is governed by the same controls:
 
-| Path | What it is |
+- **Identity.** An agent acts as the person who asked, with that person's permissions.
+- **Approval.** Any action that changes data waits for a person to approve it.
+- **Spend.** Each agent has a budget that it cannot exceed.
+- **Evidence.** Every action is recorded in a hash-chained audit log. Exports are signed, so anyone can verify them independently.
+
+Liyagent runs on your own infrastructure with the AI model of your choice.
+
+This repository contains the open-source components of Liyagent, released under the Apache License 2.0. The Liyagent platform itself is commercial software. You can try it without signing up at [liyagent.com/try](https://liyagent.com/try), or contact us at sales@liyagent.com.
+
+<br>
+
+## Contents
+
+| Path | Description |
 | --- | --- |
-| [`liya/`](liya) | **`liya`**, the command line for a Liyagent instance. Agents, tickets, triggers, providers and models, guardrails, secrets, Cedar policies, budgets, connectors, the knowledge base and the audit log — plus `liya apply` for agents-as-code and `liya run claude` to route a coding agent through the AI Gateway. Every command calls the same REST API as the web console. |
-| [`tools/verify_audit_bundle.py`](tools/verify_audit_bundle.py) | A **standalone verifier** for Liyagent audit evidence bundles. One file, no access to the instance needed: it checks the Ed25519 signature against the instance's published keys, the hash chain, the archive segments and every file hash. |
-| [`examples/liyagent_guard.py`](examples/liyagent_guard.py) | **Liyagent as the policy decision point for your own agent framework.** Your agent keeps calling its own tools; this file asks Liyagent's decision API before each call (and after, for what comes back), so the Cedar policies, guardrails and approval postures you set in Liyagent hold there too. Standard library only. |
-| [`examples/ci/liyagent.yml`](examples/ci/liyagent.yml) | **Agents as code in GitHub Actions:** plan on a pull request, apply on merge, with a service-account credential rather than a person's password. |
-| [`docs/`](docs) | The documentation and labs published at [liyagent.com/docs](https://liyagent.com/docs), as Markdown. |
+| [`liya/`](liya) | The `liya` command line for a Liyagent instance. It manages agents, tickets, triggers, models, guardrails, secrets, policies, budgets, connectors and the audit log. |
+| [`tools/verify_audit_bundle.py`](tools/verify_audit_bundle.py) | A standalone verifier for audit evidence bundles. It checks the Ed25519 signature, the hash chain and every file hash, without access to the instance. |
+| [`examples/liyagent_guard.py`](examples/liyagent_guard.py) | Applies Liyagent's policies, guardrails and approvals to the tools of your own agent framework. |
+| [`examples/ci/liyagent.yml`](examples/ci/liyagent.yml) | A GitHub Actions workflow for managing agents as code. |
+| [`docs/`](docs) | The Liyagent documentation and labs, in Markdown. |
 
-## Install `liya`
+<br>
 
-Python 3.10 or newer.
+## Installation
+
+The command line requires Python 3.10 or later.
 
 ```bash
-pipx install "git+https://github.com/liyagent/liyagent.git"      # or: pip install ...
+pipx install "git+https://github.com/liyagent/liyagent.git"
 liya --version
 ```
 
-Point it at an instance, sign in, and look around:
+<br>
+
+## Getting started
+
+Connect to an instance and sign in:
 
 ```bash
 liya env add prod --url https://liyagent.example.com --use
 liya auth login
-liya status                      # gateway, model chain and connector health
-liya agents list                 # every agent and its model binding
-liya agents chat <agent-id> "What changed in the service desk this week?"
-liya audit search outcome=denied --since 24h   # what was refused, and by which policy
 ```
 
-Output is a table by default; `-o json` or `-o yaml` for scripts, and `liya completion` prints a shell completion script. The full command reference is at [liyagent.com/docs/cli/reference](https://liyagent.com/docs/cli/reference).
-
-### Agents as code
-
-Export what an instance has, keep it in git, and apply it like infrastructure:
+Check the instance and its agents:
 
 ```bash
-liya export -o ./liyagent              # agents, providers, guardrails, policies, triggers — never secrets
-liya apply -f ./liyagent --dry-run     # prints a diff; exits 5 if changes are pending
-liya apply -f ./liyagent --reason "widen the HR agent's budget for quarter-end"
+liya status
+liya agents list
 ```
 
-`--reason` is recorded in the audit log for any change that weakens a control. Before a change ships, gate it on the agent's own evaluations:
+Send a message to an agent:
 
 ```bash
-liya agents eval service-desk --baseline pinned   # exit 0 on pass, 1 on a failure or regression
+liya agents chat <agent-id> "Summarise this week's open incidents."
 ```
 
-[`examples/ci/liyagent.yml`](examples/ci/liyagent.yml) wires both into GitHub Actions: plan and evaluate on a pull request, apply on merge.
+Review the actions that were refused in the last day:
 
-## Verify an audit evidence bundle
+```bash
+liya audit search outcome=denied --since 24h
+```
 
-An instance exports its audit log as a signed bundle; anyone can check one without trusting the server that produced it. Either with the CLI:
+Results are shown as a table by default. Add `-o json` or `-o yaml` for use in scripts. The full command reference is at [liyagent.com/docs/cli/reference](https://liyagent.com/docs/cli/reference).
+
+<br>
+
+## Agents as code
+
+Export the configuration of an instance, keep it in version control and apply changes in a controlled way.
+
+```bash
+liya export -o ./liyagent
+liya apply -f ./liyagent --dry-run
+liya apply -f ./liyagent --reason "Raise the HR agent budget for quarter end"
+```
+
+| Command | Behaviour |
+| --- | --- |
+| `liya export` | Writes agents, providers, guardrails, policies and triggers as YAML. Secrets are never exported. |
+| `liya apply --dry-run` | Shows the changes. Exits with code 5 when changes are pending. |
+| `liya apply --reason` | Applies the changes. The reason is recorded in the audit log for any change that weakens a control. |
+
+Before a change is released, run the agent's evaluation set against its approved baseline:
+
+```bash
+liya agents eval service-desk --baseline pinned
+```
+
+The command exits with code 0 when the evaluation passes and 1 when it fails or regresses. The [CI example](examples/ci/liyagent.yml) runs these steps in GitHub Actions.
+
+<br>
+
+## Verifying audit evidence
+
+A Liyagent instance can export its audit log as a signed evidence bundle. Anyone can verify a bundle without trusting the server that produced it.
+
+With the command line:
 
 ```bash
 liya audit verify audit-evidence-2026-10-06.zip --audit-keys keys.json
 ```
 
-or with the single-file verifier and nothing but `cryptography`:
+With the standalone verifier, which needs only the `cryptography` package:
 
 ```bash
 pip install cryptography
@@ -87,44 +134,60 @@ curl -s https://liyagent.example.com/.well-known/liyagent-audit-key.json -o keys
 python tools/verify_audit_bundle.py audit-evidence-2026-10-06.zip --keys keys.json
 ```
 
-| Exit code | Meaning |
+| Exit code | Result |
 | --- | --- |
-| `0` | Verified: the signature matches a published key, the hash chain is unbroken, every file hash matches |
-| `2` | A finding — something in the bundle does not check out; the output says what |
-| `3` | Intact, but no key was given to trust the signer by |
-| `1` | The bundle could not be read |
+| `0` | Verified. The signature, the hash chain and every file hash are valid. |
+| `1` | The bundle could not be read. |
+| `2` | A check failed. The output describes the finding. |
+| `3` | The bundle is intact, but no key was provided to verify the signer. |
 
-How the log is built, and what a bundle contains, is described in [Audit log](https://liyagent.com/docs/monitor/audit-log).
+See [Audit log](https://liyagent.com/docs/monitor/audit-log) for how the log and its bundles are built.
 
-## Use Liyagent's governance from your own agent
+<br>
+
+## Governing your own agents
+
+[`liyagent_guard.py`](examples/liyagent_guard.py) lets an agent built with any framework use Liyagent for its decisions. Before each tool call, it asks Liyagent whether the call is allowed.
 
 ```python
+import os
 from liyagent_guard import Guard, Denied, PendingApproval
 
 guard = Guard("https://liyagent.example.com", token=os.environ["LIYAGENT_AGENT_TOKEN"])
 
-@guard.tool(writes=True)                 # policy check before the call, screening after
+@guard.tool(writes=True)
 def refund(order: str, amount: int) -> str:
     ...
 
 try:
     refund("SO-1042", 120)
-except PendingApproval as p:             # a person must approve; call again with approval_id=p.id
-    ...
-except Denied as d:                      # a Cedar policy or guardrail said no, and why
-    ...
+except PendingApproval as pending:
+    print("Waiting for approval:", pending.approval_id)
+except Denied as denied:
+    print("Refused:", denied.decision)
 ```
 
-Fail-closed by design: if Liyagent cannot be reached, the call is not made. See [`examples/liyagent_guard.py`](examples/liyagent_guard.py).
+If Liyagent cannot be reached, the call is not made.
+
+<br>
 
 ## Documentation
 
-Start with [What is an agentic AI platform?](https://liyagent.com/docs/overview/agentic-ai-platform) and [Self-hosted AI agents](https://liyagent.com/docs/overview/self-hosted-ai-agents), then the [Quickstart](https://liyagent.com/docs/get-started/quickstart). The same pages are in [`docs/`](docs) here as Markdown.
+- [What is an agentic AI platform?](https://liyagent.com/docs/overview/agentic-ai-platform)
+- [Self-hosted AI agents](https://liyagent.com/docs/overview/self-hosted-ai-agents)
+- [Quickstart](https://liyagent.com/docs/get-started/quickstart)
+- [Command line reference](https://liyagent.com/docs/cli/reference)
+
+<br>
 
 ## Security
 
-Report a vulnerability to **security@liyagent.com**, never in a public issue. Details in [SECURITY.md](SECURITY.md).
+Please report vulnerabilities to security@liyagent.com and not in a public issue. See [SECURITY.md](SECURITY.md) for details.
 
-## Licence
+<br>
 
-Apache License 2.0 — see [LICENSE](LICENSE). Liyagent, Liya and TicketIQ are names of Liyagent. SAP, Salesforce, Microsoft and other product names are trademarks of their owners; Liyagent is independent of them.
+## License
+
+Released under the [Apache License 2.0](LICENSE).
+
+Liyagent, Liya and TicketIQ are names of Liyagent. SAP, Salesforce, Microsoft and other product names are trademarks of their respective owners. Liyagent is not affiliated with them.

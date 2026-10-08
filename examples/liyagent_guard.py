@@ -1,23 +1,26 @@
-"""Liyagent as the policy decision point for an agent framework's own tools.
+"""Use Liyagent as the policy decision point for your own agent's tools.
 
-Your agent calls its tools, retriever and memory itself; Liyagent never sees
-those calls. This file asks Liyagent's decision API before each one (and
-after, for what comes back), so the Cedar policies, guardrails, data-policy
-clamps and approval postures you set in Liyagent hold here too. Standard
-library only; copy it into your project.
+Your agent calls its own tools, retriever and memory, so Liyagent never sees
+those calls directly. This module asks Liyagent's decision API before each
+call, and screens what comes back. The policies, guardrails, data rules and
+approval settings you configure in Liyagent then apply here as well.
+
+The module uses only the Python standard library. Copy it into your project.
 
     guard = Guard("https://liyagent.example.com", token=os.environ["LIYAGENT_AGENT_TOKEN"])
 
-    @guard.tool(writes=True)            # pre_tool + post_tool around the call
+    @guard.tool(writes=True)            # checks before and after the call
     def refund(order: str, amount: int) -> str: ...
 
     passages = guard.retrieval("kb", "\\n".join(docs))    # screened text
     note = guard.memory_write("notes", note)             # redacted text
-    guard.handoff("billing-bot", summary)                # Cedar `invoke`
+    guard.handoff("billing-bot", summary)                # checked hand-off
 
-A refusal raises Denied; a write that needs a person raises PendingApproval
-with its id — call again with approval_id=... once it is approved. Fail
-closed: if Liyagent cannot be reached the call is not made.
+A refused call raises Denied. A call that needs a person's approval raises
+PendingApproval, which carries the approval ID. Call again with approval_id
+once the request is approved.
+
+The guard fails closed. If Liyagent cannot be reached, the call is not made.
 """
 
 from __future__ import annotations
@@ -142,7 +145,7 @@ def langgraph_tool_node(guard: Guard, tools: list, writes: set[str] = frozenset(
                 shaped = guard.before(t.name, kwargs, writes=t.name in writes)
                 return guard.after(t.name, t.invoke(shaped))
             except PendingApproval as e:
-                return f"NOT EXECUTED — waiting for approval {e.approval_id}"
+                return f"Not executed. Waiting for approval {e.approval_id}."
             except Denied as e:
                 return f"refused by policy: {e}"
         return StructuredTool.from_function(run, name=t.name, description=t.description,
@@ -162,7 +165,7 @@ def openai_agents_tool(guard: Guard, fn: Callable, *, writes: bool = False):
         try:
             return guard.tool(fn.__name__, writes=writes)(fn)(*args, **kwargs)
         except PendingApproval as e:
-            return f"NOT EXECUTED — waiting for approval {e.approval_id}"
+            return f"Not executed. Waiting for approval {e.approval_id}."
         except Denied as e:
             return f"refused by policy: {e}"
     return function_tool(run)
