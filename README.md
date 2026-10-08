@@ -1,4 +1,6 @@
-# Liyagent
+<p align="center"><img src="https://liyagent.com/img/liyagent-logo.png" width="88" alt="Liyagent"></p>
+
+<h1 align="center">Liyagent</h1>
 
 **Governed AI agents that do the work inside the systems a company already runs** — the IT
 service desk, HR, SAP, Salesforce and finance — with every risky step held for a person to
